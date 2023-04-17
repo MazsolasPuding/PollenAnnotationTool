@@ -6,6 +6,10 @@ from main_senior import MainSenior
 from Resources.ui_login import Ui_Login
 from Resources.ui_create_account import Ui_Create_account
 
+"""
+Mac init.
+"""
+
 app = QApplication(sys.argv)
 
 
