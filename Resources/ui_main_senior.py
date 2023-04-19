@@ -20,7 +20,8 @@ from PySide6.QtWidgets import (QApplication, QDockWidget, QFrame, QHBoxLayout,
     QHeaderView, QLabel, QLineEdit, QListView,
     QMainWindow, QMenu, QMenuBar, QPushButton,
     QSizePolicy, QSlider, QSpacerItem, QStatusBar,
-    QToolBar, QTreeView, QVBoxLayout, QWidget)
+    QTableView, QToolBar, QTreeView, QVBoxLayout,
+    QWidget)
 import resources_rc
 
 class Ui_senior_MainWindow(object):
@@ -130,22 +131,11 @@ class Ui_senior_MainWindow(object):
 
         self.verticalLayout_3.addWidget(self.label_11)
 
-        self.frame = QFrame(self.dockWidgetContents)
-        self.frame.setObjectName(u"frame")
-        self.frame.setFrameShape(QFrame.StyledPanel)
-        self.frame.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_6 = QVBoxLayout(self.frame)
-        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
-        self.label_5 = QLabel(self.frame)
-        self.label_5.setObjectName(u"label_5")
-        self.label_5.setAlignment(Qt.AlignCenter)
+        self.thumbnailsView = QTableView(self.dockWidgetContents)
+        self.thumbnailsView.setObjectName(u"thumbnailsView")
 
-        self.verticalLayout_6.addWidget(self.label_5)
+        self.verticalLayout_3.addWidget(self.thumbnailsView)
 
-
-        self.verticalLayout_3.addWidget(self.frame)
-
-        self.verticalLayout_3.setStretch(1, 10)
         self.thumbnailDock.setWidget(self.dockWidgetContents)
         senior_MainWindow.addDockWidget(Qt.LeftDockWidgetArea, self.thumbnailDock)
         self.metadataDock = QDockWidget(senior_MainWindow)
@@ -168,10 +158,10 @@ class Ui_senior_MainWindow(object):
 
         self.verticalLayout_4.addWidget(self.label_10)
 
-        self.treeView = QTreeView(self.dockWidgetContents_2)
-        self.treeView.setObjectName(u"treeView")
+        self.directoryView = QTreeView(self.dockWidgetContents_2)
+        self.directoryView.setObjectName(u"directoryView")
 
-        self.verticalLayout_4.addWidget(self.treeView)
+        self.verticalLayout_4.addWidget(self.directoryView)
 
         self.line = QFrame(self.dockWidgetContents_2)
         self.line.setObjectName(u"line")
@@ -203,10 +193,10 @@ class Ui_senior_MainWindow(object):
 
         self.verticalLayout.addWidget(self.label)
 
-        self.listView = QListView(self.dockWidgetContents_3)
-        self.listView.setObjectName(u"listView")
+        self.pollenListView = QListView(self.dockWidgetContents_3)
+        self.pollenListView.setObjectName(u"pollenListView")
 
-        self.verticalLayout.addWidget(self.listView)
+        self.verticalLayout.addWidget(self.pollenListView)
 
         self.verticalSpacer_2 = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Minimum)
 
@@ -217,18 +207,18 @@ class Ui_senior_MainWindow(object):
 
         self.verticalLayout.addWidget(self.label_3)
 
-        self.horizontalSlider = QSlider(self.dockWidgetContents_3)
-        self.horizontalSlider.setObjectName(u"horizontalSlider")
-        self.horizontalSlider.setMinimum(0)
-        self.horizontalSlider.setMaximum(10)
-        self.horizontalSlider.setSingleStep(1)
-        self.horizontalSlider.setPageStep(1)
-        self.horizontalSlider.setSliderPosition(5)
-        self.horizontalSlider.setOrientation(Qt.Horizontal)
-        self.horizontalSlider.setTickPosition(QSlider.TicksBelow)
-        self.horizontalSlider.setTickInterval(1)
+        self.confidencelSlider = QSlider(self.dockWidgetContents_3)
+        self.confidencelSlider.setObjectName(u"confidencelSlider")
+        self.confidencelSlider.setMinimum(0)
+        self.confidencelSlider.setMaximum(10)
+        self.confidencelSlider.setSingleStep(1)
+        self.confidencelSlider.setPageStep(1)
+        self.confidencelSlider.setSliderPosition(5)
+        self.confidencelSlider.setOrientation(Qt.Horizontal)
+        self.confidencelSlider.setTickPosition(QSlider.TicksBelow)
+        self.confidencelSlider.setTickInterval(1)
 
-        self.verticalLayout.addWidget(self.horizontalSlider)
+        self.verticalLayout.addWidget(self.confidencelSlider)
 
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
@@ -261,10 +251,10 @@ class Ui_senior_MainWindow(object):
 
         self.verticalLayout.addWidget(self.label_4)
 
-        self.lineEdit = QLineEdit(self.dockWidgetContents_3)
-        self.lineEdit.setObjectName(u"lineEdit")
+        self.commentEdit = QLineEdit(self.dockWidgetContents_3)
+        self.commentEdit.setObjectName(u"commentEdit")
 
-        self.verticalLayout.addWidget(self.lineEdit)
+        self.verticalLayout.addWidget(self.commentEdit)
 
         self.verticalSpacer_3 = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Minimum)
 
@@ -296,21 +286,21 @@ class Ui_senior_MainWindow(object):
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.pushButton = QPushButton(self.dockWidgetContents_3)
-        self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setMinimumSize(QSize(0, 50))
-        self.pushButton.setIcon(icon5)
-        self.pushButton.setIconSize(QSize(20, 20))
+        self.prevButton = QPushButton(self.dockWidgetContents_3)
+        self.prevButton.setObjectName(u"prevButton")
+        self.prevButton.setMinimumSize(QSize(0, 50))
+        self.prevButton.setIcon(icon5)
+        self.prevButton.setIconSize(QSize(20, 20))
 
-        self.horizontalLayout.addWidget(self.pushButton)
+        self.horizontalLayout.addWidget(self.prevButton)
 
-        self.pushButton_2 = QPushButton(self.dockWidgetContents_3)
-        self.pushButton_2.setObjectName(u"pushButton_2")
-        self.pushButton_2.setMinimumSize(QSize(0, 50))
-        self.pushButton_2.setIcon(icon6)
-        self.pushButton_2.setIconSize(QSize(20, 20))
+        self.nextButton = QPushButton(self.dockWidgetContents_3)
+        self.nextButton.setObjectName(u"nextButton")
+        self.nextButton.setMinimumSize(QSize(0, 50))
+        self.nextButton.setIcon(icon6)
+        self.nextButton.setIconSize(QSize(20, 20))
 
-        self.horizontalLayout.addWidget(self.pushButton_2)
+        self.horizontalLayout.addWidget(self.nextButton)
 
 
         self.verticalLayout.addLayout(self.horizontalLayout)
@@ -374,7 +364,6 @@ class Ui_senior_MainWindow(object):
         self.menuView.setTitle(QCoreApplication.translate("senior_MainWindow", u"View", None))
         self.menuHelp.setTitle(QCoreApplication.translate("senior_MainWindow", u"Help", None))
         self.label_11.setText(QCoreApplication.translate("senior_MainWindow", u"Current Directory:", None))
-        self.label_5.setText(QCoreApplication.translate("senior_MainWindow", u"Thumbnails", None))
         self.label_10.setText(QCoreApplication.translate("senior_MainWindow", u"Driectroy View:", None))
         self.label_6.setText(QCoreApplication.translate("senior_MainWindow", u"MetaData", None))
         self.label.setText(QCoreApplication.translate("senior_MainWindow", u"Pollen Type:", None))
@@ -384,8 +373,8 @@ class Ui_senior_MainWindow(object):
         self.label_7.setText(QCoreApplication.translate("senior_MainWindow", u"100", None))
         self.label_4.setText(QCoreApplication.translate("senior_MainWindow", u"Comment:", None))
         self.saveButton.setText(QCoreApplication.translate("senior_MainWindow", u"Save", None))
-        self.pushButton.setText(QCoreApplication.translate("senior_MainWindow", u"Previous", None))
-        self.pushButton_2.setText(QCoreApplication.translate("senior_MainWindow", u"Next", None))
+        self.prevButton.setText(QCoreApplication.translate("senior_MainWindow", u"Previous", None))
+        self.nextButton.setText(QCoreApplication.translate("senior_MainWindow", u"Next", None))
         self.toolBar.setWindowTitle(QCoreApplication.translate("senior_MainWindow", u"toolBar", None))
     # retranslateUi
 

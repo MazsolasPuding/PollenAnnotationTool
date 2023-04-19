@@ -10,8 +10,8 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QTableView, QStyledItem
 # Create a custom namedtuple class to hold our data.
 preview = namedtuple("preview", "id title image")
 
-NUMBER_OF_COLUMNS = 4
-CELL_PADDING = 20 # all sides
+NUMBER_OF_COLUMNS = 2
+CELL_PADDING = 5 # all sides
 
 class PreviewDelegate(QStyledItemDelegate):
 
@@ -39,7 +39,7 @@ class PreviewDelegate(QStyledItemDelegate):
 
     def sizeHint(self, option, index):
         # All items the same size.
-        return QSize(300, 200)
+        return QSize(120, 120)
 
 
 class PreviewModel(QAbstractTableModel):
@@ -70,7 +70,7 @@ class PreviewModel(QAbstractTableModel):
 
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, open_directory):
         super().__init__()
 
         self.view = QTableView()
@@ -84,9 +84,10 @@ class MainWindow(QMainWindow):
         self.view.setModel(self.model)
 
         self.setCentralWidget(self.view)
+        self.path = open_directory
 
         # Add a bunch of images.
-        for n, fn in enumerate(glob.glob("*.jpg")):
+        for n, fn in enumerate(glob.glob(f"{self.path}*.jpg")):
             image = QImage(fn)
             item = preview(n, fn, image)
             self.model.previews.append(item)
@@ -95,8 +96,8 @@ class MainWindow(QMainWindow):
         self.view.resizeRowsToContents()
         self.view.resizeColumnsToContents()
 
-
-app = QApplication(sys.argv)
-window = MainWindow()
-window.show()
-app.exec()
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = MainWindow("c:/users/horva/pictures/")
+    window.show()
+    app.exec()

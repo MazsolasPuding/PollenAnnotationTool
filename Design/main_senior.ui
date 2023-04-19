@@ -128,7 +128,7 @@ border: 1px solid black;
 border: 1px solid black;
 }</string>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,10">
+    <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0">
      <item>
       <widget class="QLabel" name="label_11">
        <property name="text">
@@ -137,26 +137,7 @@ border: 1px solid black;
       </widget>
      </item>
      <item>
-      <widget class="QFrame" name="frame">
-       <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_6">
-        <item>
-         <widget class="QLabel" name="label_5">
-          <property name="text">
-           <string>Thumbnails</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
+      <widget class="QTableView" name="thumbnailsView"/>
      </item>
     </layout>
    </widget>
@@ -197,7 +178,7 @@ border: 1px solid black;
       </widget>
      </item>
      <item>
-      <widget class="QTreeView" name="treeView"/>
+      <widget class="QTreeView" name="directoryView"/>
      </item>
      <item>
       <widget class="Line" name="line">
@@ -244,7 +225,7 @@ border: 1px solid black;
       </widget>
      </item>
      <item>
-      <widget class="QListView" name="listView"/>
+      <widget class="QListView" name="pollenListView"/>
      </item>
      <item>
       <spacer name="verticalSpacer_2">
@@ -270,7 +251,7 @@ border: 1px solid black;
       </widget>
      </item>
      <item>
-      <widget class="QSlider" name="horizontalSlider">
+      <widget class="QSlider" name="confidencelSlider">
        <property name="minimum">
         <number>0</number>
        </property>
@@ -352,7 +333,7 @@ border: 1px solid black;
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit"/>
+      <widget class="QLineEdit" name="commentEdit"/>
      </item>
      <item>
       <spacer name="verticalSpacer_3">
@@ -426,7 +407,7 @@ border: 1px solid black;
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="prevButton">
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -449,7 +430,7 @@ border: 1px solid black;
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_2">
+        <widget class="QPushButton" name="nextButton">
          <property name="minimumSize">
           <size>
            <width>0</width>

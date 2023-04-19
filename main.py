@@ -2,7 +2,7 @@ from PySide6.QtWidgets import QApplication, QDialog, QWidget, QStackedWidget, QL
 import sys
 import sqlite3
 from Resources.ui_welcome import Ui_Welcome
-from main_senior import MainSenior
+from Libs.main_senior import MainSenior
 from Resources.ui_login import Ui_Login
 from Resources.ui_create_account import Ui_Create_account
 
@@ -10,7 +10,6 @@ from Resources.ui_create_account import Ui_Create_account
 Mac init.
 """
 
-app = QApplication(sys.argv)
 
 
 class Welcome(QDialog, Ui_Welcome):
@@ -31,47 +30,6 @@ class Welcome(QDialog, Ui_Welcome):
         create = CreateAccount(self.widget)
         self.widget.addWidget(create)
         self.widget.setCurrentIndex(self.widget.currentIndex() + 1)
-
-
-class Login(QDialog, Ui_Login):
-    def __init__(self, widget):
-        super().__init__()
-        self.setupUi(self)
-        self.widget = widget
-
-        self.passwordEdit.setEchoMode(QLineEdit.Password)
-        self.loginButton.clicked.connect(self.login_user)
-        self.backButton.clicked.connect(self.go_back)
-
-    def login_user(self):
-        username = self.usernameEdit.text()
-        password = self.passwordEdit.text()
-
-        if not username or not password:
-            self.errorLabel.setText("Please fill out all the fields!")
-            return
-        self.errorLabel.setText("")
-
-        connection = sqlite3.connect("users.db")
-        cursor = connection.cursor()
-        query = f'SELECT password FROM login_info WHERE username =\'{username}\''
-        cursor.execute(query)
-        try:
-            fetched_password = cursor.fetchone()[0]
-            if fetched_password != password:
-                self.errorLabel.setText("Invalid password")
-                return
-            print("Successfully logged in.")
-            connection.close()
-        except TypeError:
-            self.errorLabel.setText("Username not found, please create an account.")
-            return
-        self.widget.hide()
-        self.main = MainSenior()
-        self.main.show()
-
-    def go_back(self):
-        self.widget.removeWidget(self.widget.widget(self.widget.currentIndex()))
 
 
 class CreateAccount(QDialog, Ui_Create_account):
@@ -127,6 +85,49 @@ class CreateAccount(QDialog, Ui_Create_account):
         self.widget.setCurrentIndex(self.widget.currentIndex() + 1)
 
 
+class Login(QDialog, Ui_Login):
+    def __init__(self, widget):
+        super().__init__()
+        self.setupUi(self)
+        self.widget = widget
+
+        self.passwordEdit.setEchoMode(QLineEdit.Password)
+        self.loginButton.clicked.connect(self.login_user)
+        self.backButton.clicked.connect(self.go_back)
+
+    def login_user(self):
+        username = self.usernameEdit.text()
+        password = self.passwordEdit.text()
+
+        if not username or not password:
+            self.errorLabel.setText("Please fill out all the fields!")
+            return
+        self.errorLabel.setText("")
+
+        connection = sqlite3.connect("users.db")
+        cursor = connection.cursor()
+        query = f'SELECT password FROM login_info WHERE username =\'{username}\''
+        cursor.execute(query)
+        try:
+            fetched_password = cursor.fetchone()[0]
+            if fetched_password != password:
+                self.errorLabel.setText("Invalid password")
+                return
+            print("Successfully logged in.")
+            connection.close()
+        except TypeError:
+            self.errorLabel.setText("Username not found, please create an account.")
+            return
+        self.widget.hide()
+        self.main = MainSenior(app)
+        self.main.show()
+
+    def go_back(self):
+        self.widget.removeWidget(self.widget.widget(self.widget.currentIndex()))
+
+
+app = QApplication(sys.argv)
+
 widget = QStackedWidget()
 widget.setFixedWidth(1200)
 widget.setFixedHeight(800)
@@ -135,6 +136,8 @@ welcome = Welcome(widget)
 widget.addWidget(welcome)
 
 widget.show()
+# window = MainSenior(app)
+# window.show()
 app.exec()
 
 
