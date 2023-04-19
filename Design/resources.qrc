@@ -37,6 +37,7 @@
     <file>Icons/objects.png</file>
     <file>Icons/open.png</file>
     <file>Icons/open.svg</file>
+    <file>Icons/pollen-icon.jpg</file>
     <file>Icons/prev.png</file>
     <file>Icons/quit.png</file>
     <file>Icons/resetall.png</file>
@@ -50,8 +51,5 @@
     <file>Icons/zoom.png</file>
     <file>Icons/zoom-in.png</file>
     <file>Icons/zoom-out.png</file>
-  </qresource>
-  <qresource prefix="Main">
-    <file>Icons/pollen-icon.jpg</file>
   </qresource>
 </RCC>
