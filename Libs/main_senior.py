@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QApplication, QDialog, QWidget, QMainWindow, QFileDialog
+from PySide6.QtWidgets import QApplication, QDialog, QWidget, QMainWindow, QFileDialog, QMessageBox
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QImage, QPixmap
 
@@ -30,12 +30,29 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
         self.is_senior = is_senior
         self.index = 0
 
-        #
+        # Load Pollen classes
         self.load_predefined_classes(self.predef_classes_path)
+
+        # Add Menu actions
+        self.label_dock_view_action = self.labellingDock.toggleViewAction()
+        self.label_dock_view_action.setText("Labelling Dock")
+        self.menuView.addAction(self.label_dock_view_action)
+        self.info_dock_view_action = self.metadataDock.toggleViewAction()
+        self.info_dock_view_action.setText("Info Dock")
+        self.menuView.addAction(self.info_dock_view_action)
+        self.thumbnail_dock_view_action = self.thumbnailDock.toggleViewAction()
+        self.thumbnail_dock_view_action.setText("Thumbnail Dock")
+        self.menuView.addAction(self.thumbnail_dock_view_action)
+        
 
         # Set actions
         self.actionQuit.triggered.connect(self.quit)
         self.actionOpen_Dir.triggered.connect(self.load_images)
+        self.actionNext.triggered.connect(self.next)
+        self.actionPrevious.triggered.connect(self.previous)
+        self.actionSave.triggered.connect(self.save)
+        self.actionAbout.triggered.connect(self.about)
+        self.actionAboutQt.triggered.connect(self.aboutQt)
         self.pollenListWidget.itemClicked.connect(self.class_selected)
         self.nextButton.clicked.connect(self.next)
         self.prevButton.clicked.connect(self.previous)
@@ -53,6 +70,12 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
 
     def quit(self):
         self.app.quit()
+
+    def about(self):
+        QMessageBox.information(self, "About", "For Help check the included README File or contact the creator of the app.")
+
+    def aboutQt(self):
+        QApplication.aboutQt()
 
     def load_images(self):
         self.reset()

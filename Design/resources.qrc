@@ -1,6 +1,8 @@
 <RCC>
   <qresource>
     <file>Icons/app.icns</file>
+    <file>Icons/aboutIcon.png</file>
+    <file>Icons/aboutQtIcon.png</file>
     <file>Icons/app.png</file>
     <file>Icons/app.svg</file>
     <file>Icons/cancel.png</file>

@@ -31,17 +31,36 @@ border: 1px solid black;
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
-     <widget class="QLabel" name="pictureLabel">
-      <property name="styleSheet">
-       <string notr="true">background-color:rgb(216, 246, 255);
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="QWidget" name="annotation_page">
+       <attribute name="title">
+        <string>Annotation Page</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="styleSheet">
+           <string notr="true">background-color:rgb(216, 246, 255);
 font: 20pt &quot;SansSerif&quot;;</string>
-      </property>
-      <property name="text">
-       <string>Open a Directory to show images.</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
+          </property>
+          <property name="text">
+           <string>Open Directory to show Image</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="review_page">
+       <attribute name="title">
+        <string>Review Page</string>
+       </attribute>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -76,8 +95,6 @@ font: 20pt &quot;SansSerif&quot;;</string>
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="actionAbout"/>
-    <addaction name="actionAboutQt"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
@@ -100,9 +117,6 @@ font: 20pt &quot;SansSerif&quot;;</string>
     <string notr="true">QDockWidget#thumbnailDock{
 border: 1px solid black;
 }</string>
-   </property>
-   <property name="windowTitle">
-    <string>Thumbnail Dock</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
@@ -152,9 +166,6 @@ border: 1px solid black;
 border: 1px solid black;
 }</string>
    </property>
-   <property name="windowTitle">
-    <string>Info Dock</string>
-   </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
    </attribute>
@@ -200,9 +211,6 @@ border: 1px solid black;
     <string notr="true">QWidget#dockWidgetContents_3{
 border: 1px solid black;
 }</string>
-   </property>
-   <property name="windowTitle">
-    <string>Labelling Dock</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -527,24 +535,6 @@ border: 1px solid black;
    </property>
    <property name="text">
     <string>Next</string>
-   </property>
-  </action>
-  <action name="actionAbout">
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/Icons/aboutIcon.png</normaloff>:/Icons/aboutIcon.png</iconset>
-   </property>
-   <property name="text">
-    <string>About</string>
-   </property>
-  </action>
-  <action name="actionAboutQt">
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/Icons/aboutQtIcon.png</normaloff>:/Icons/aboutQtIcon.png</iconset>
-   </property>
-   <property name="text">
-    <string>AboutQt</string>
    </property>
   </action>
  </widget>
