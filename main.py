@@ -106,10 +106,12 @@ class Login(QDialog, Ui_Login):
 
         connection = sqlite3.connect("users.db")
         cursor = connection.cursor()
-        query = f'SELECT password FROM login_info WHERE username =\'{username}\''
+        query = f'SELECT password, senior FROM login_info WHERE username =\'{username}\''
         cursor.execute(query)
         try:
-            fetched_password = cursor.fetchone()[0]
+            fetched = cursor.fetchall()
+            fetched_password = fetched[0][0]
+            fetched_is_senior = fetched[0][1]
             if fetched_password != password:
                 self.errorLabel.setText("Invalid password")
                 return
@@ -119,7 +121,7 @@ class Login(QDialog, Ui_Login):
             self.errorLabel.setText("Username not found, please create an account.")
             return
         self.widget.hide()
-        self.main = MainSenior(app)
+        self.main = MainSenior(app, username, fetched_is_senior )
         self.main.show()
 
     def go_back(self):
@@ -128,16 +130,16 @@ class Login(QDialog, Ui_Login):
 
 app = QApplication(sys.argv)
 
-widget = QStackedWidget()
-widget.setFixedWidth(1200)
-widget.setFixedHeight(800)
+# widget = QStackedWidget()
+# widget.setFixedWidth(1200)
+# widget.setFixedHeight(800)
 
-welcome = Welcome(widget)
-widget.addWidget(welcome)
+# welcome = Welcome(widget)
+# widget.addWidget(welcome)
 
-widget.show()
-# window = MainSenior(app)
-# window.show()
+# widget.show()
+window = MainSenior(app, "horvada", 1)
+window.show()
 app.exec()
 
 

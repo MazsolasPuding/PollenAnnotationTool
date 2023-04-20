@@ -11,7 +11,7 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QTableView, QStyledItem
 preview = namedtuple("preview", "id title image")
 
 NUMBER_OF_COLUMNS = 2
-CELL_PADDING = 5 # all sides
+CELL_PADDING = 3 # all sides
 
 class PreviewDelegate(QStyledItemDelegate):
 
@@ -39,7 +39,7 @@ class PreviewDelegate(QStyledItemDelegate):
 
     def sizeHint(self, option, index):
         # All items the same size.
-        return QSize(120, 120)
+        return QSize(110, 110)
 
 
 class PreviewModel(QAbstractTableModel):

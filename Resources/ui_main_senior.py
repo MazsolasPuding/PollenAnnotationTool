@@ -17,11 +17,11 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
 from PySide6.QtWidgets import (QApplication, QDockWidget, QFrame, QHBoxLayout,
-    QHeaderView, QLabel, QLineEdit, QListView,
-    QMainWindow, QMenu, QMenuBar, QPushButton,
-    QSizePolicy, QSlider, QSpacerItem, QStatusBar,
-    QTableView, QToolBar, QTreeView, QVBoxLayout,
-    QWidget)
+    QHeaderView, QLabel, QLineEdit, QListWidget,
+    QListWidgetItem, QMainWindow, QMenu, QMenuBar,
+    QPushButton, QSizePolicy, QSlider, QSpacerItem,
+    QStatusBar, QTableView, QTableWidget, QTableWidgetItem,
+    QToolBar, QTreeView, QVBoxLayout, QWidget)
 import resources_rc
 
 class Ui_senior_MainWindow(object):
@@ -79,21 +79,13 @@ class Ui_senior_MainWindow(object):
 "}")
         self.verticalLayout_2 = QVBoxLayout(self.centralwidget)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.pictureFrame = QFrame(self.centralwidget)
-        self.pictureFrame.setObjectName(u"pictureFrame")
-        self.pictureFrame.setFrameShape(QFrame.StyledPanel)
-        self.pictureFrame.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_5 = QVBoxLayout(self.pictureFrame)
-        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
-        self.label_2 = QLabel(self.pictureFrame)
-        self.label_2.setObjectName(u"label_2")
-        self.label_2.setStyleSheet(u"background-color:rgb(216, 246, 255)")
-        self.label_2.setAlignment(Qt.AlignCenter)
+        self.pictureLabel = QLabel(self.centralwidget)
+        self.pictureLabel.setObjectName(u"pictureLabel")
+        self.pictureLabel.setStyleSheet(u"background-color:rgb(216, 246, 255);\n"
+"font: 20pt \"SansSerif\";")
+        self.pictureLabel.setAlignment(Qt.AlignCenter)
 
-        self.verticalLayout_5.addWidget(self.label_2)
-
-
-        self.verticalLayout_2.addWidget(self.pictureFrame)
+        self.verticalLayout_2.addWidget(self.pictureLabel)
 
         senior_MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(senior_MainWindow)
@@ -115,7 +107,7 @@ class Ui_senior_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.thumbnailDock.sizePolicy().hasHeightForWidth())
         self.thumbnailDock.setSizePolicy(sizePolicy)
-        self.thumbnailDock.setMinimumSize(QSize(250, 300))
+        self.thumbnailDock.setMinimumSize(QSize(288, 300))
         self.thumbnailDock.setStyleSheet(u"QDockWidget#thumbnailDock{\n"
 "border: 1px solid black;\n"
 "}")
@@ -133,6 +125,7 @@ class Ui_senior_MainWindow(object):
 
         self.thumbnailsView = QTableView(self.dockWidgetContents)
         self.thumbnailsView.setObjectName(u"thumbnailsView")
+        self.thumbnailsView.setMinimumSize(QSize(270, 0))
 
         self.verticalLayout_3.addWidget(self.thumbnailsView)
 
@@ -142,7 +135,7 @@ class Ui_senior_MainWindow(object):
         self.metadataDock.setObjectName(u"metadataDock")
         sizePolicy.setHeightForWidth(self.metadataDock.sizePolicy().hasHeightForWidth())
         self.metadataDock.setSizePolicy(sizePolicy)
-        self.metadataDock.setMinimumSize(QSize(100, 250))
+        self.metadataDock.setMinimumSize(QSize(100, 450))
         self.metadataDock.setStyleSheet(u"QDockWidget#metadataDock{\n"
 "border: 1px solid black;\n"
 "}")
@@ -170,12 +163,15 @@ class Ui_senior_MainWindow(object):
 
         self.verticalLayout_4.addWidget(self.line)
 
-        self.label_6 = QLabel(self.dockWidgetContents_2)
-        self.label_6.setObjectName(u"label_6")
-        self.label_6.setMinimumSize(QSize(0, 100))
-        self.label_6.setAlignment(Qt.AlignCenter)
+        self.label_5 = QLabel(self.dockWidgetContents_2)
+        self.label_5.setObjectName(u"label_5")
 
-        self.verticalLayout_4.addWidget(self.label_6)
+        self.verticalLayout_4.addWidget(self.label_5)
+
+        self.tableWidget = QTableWidget(self.dockWidgetContents_2)
+        self.tableWidget.setObjectName(u"tableWidget")
+
+        self.verticalLayout_4.addWidget(self.tableWidget)
 
         self.metadataDock.setWidget(self.dockWidgetContents_2)
         senior_MainWindow.addDockWidget(Qt.LeftDockWidgetArea, self.metadataDock)
@@ -193,10 +189,10 @@ class Ui_senior_MainWindow(object):
 
         self.verticalLayout.addWidget(self.label)
 
-        self.pollenListView = QListView(self.dockWidgetContents_3)
-        self.pollenListView.setObjectName(u"pollenListView")
+        self.pollenListWidget = QListWidget(self.dockWidgetContents_3)
+        self.pollenListWidget.setObjectName(u"pollenListWidget")
 
-        self.verticalLayout.addWidget(self.pollenListView)
+        self.verticalLayout.addWidget(self.pollenListWidget)
 
         self.verticalSpacer_2 = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Minimum)
 
@@ -207,18 +203,18 @@ class Ui_senior_MainWindow(object):
 
         self.verticalLayout.addWidget(self.label_3)
 
-        self.confidencelSlider = QSlider(self.dockWidgetContents_3)
-        self.confidencelSlider.setObjectName(u"confidencelSlider")
-        self.confidencelSlider.setMinimum(0)
-        self.confidencelSlider.setMaximum(10)
-        self.confidencelSlider.setSingleStep(1)
-        self.confidencelSlider.setPageStep(1)
-        self.confidencelSlider.setSliderPosition(5)
-        self.confidencelSlider.setOrientation(Qt.Horizontal)
-        self.confidencelSlider.setTickPosition(QSlider.TicksBelow)
-        self.confidencelSlider.setTickInterval(1)
+        self.confidenceSlider = QSlider(self.dockWidgetContents_3)
+        self.confidenceSlider.setObjectName(u"confidenceSlider")
+        self.confidenceSlider.setMinimum(0)
+        self.confidenceSlider.setMaximum(10)
+        self.confidenceSlider.setSingleStep(1)
+        self.confidenceSlider.setPageStep(1)
+        self.confidenceSlider.setSliderPosition(5)
+        self.confidenceSlider.setOrientation(Qt.Horizontal)
+        self.confidenceSlider.setTickPosition(QSlider.TicksBelow)
+        self.confidenceSlider.setTickInterval(1)
 
-        self.verticalLayout.addWidget(self.confidencelSlider)
+        self.verticalLayout.addWidget(self.confidenceSlider)
 
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
@@ -358,14 +354,14 @@ class Ui_senior_MainWindow(object):
         self.actionQuit.setText(QCoreApplication.translate("senior_MainWindow", u"Quit", None))
         self.actionPrevious.setText(QCoreApplication.translate("senior_MainWindow", u"Prev", None))
         self.actionNext.setText(QCoreApplication.translate("senior_MainWindow", u"Next", None))
-        self.label_2.setText(QCoreApplication.translate("senior_MainWindow", u"Image", None))
+        self.pictureLabel.setText(QCoreApplication.translate("senior_MainWindow", u"Open a Directory to show images.", None))
         self.menuFile.setTitle(QCoreApplication.translate("senior_MainWindow", u"File", None))
         self.menuEdit.setTitle(QCoreApplication.translate("senior_MainWindow", u"Edit", None))
         self.menuView.setTitle(QCoreApplication.translate("senior_MainWindow", u"View", None))
         self.menuHelp.setTitle(QCoreApplication.translate("senior_MainWindow", u"Help", None))
         self.label_11.setText(QCoreApplication.translate("senior_MainWindow", u"Current Directory:", None))
         self.label_10.setText(QCoreApplication.translate("senior_MainWindow", u"Driectroy View:", None))
-        self.label_6.setText(QCoreApplication.translate("senior_MainWindow", u"MetaData", None))
+        self.label_5.setText(QCoreApplication.translate("senior_MainWindow", u"Metadata:", None))
         self.label.setText(QCoreApplication.translate("senior_MainWindow", u"Pollen Type:", None))
         self.label_3.setText(QCoreApplication.translate("senior_MainWindow", u"Confidence Scale:", None))
         self.label_8.setText(QCoreApplication.translate("senior_MainWindow", u"0", None))
