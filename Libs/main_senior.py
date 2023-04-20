@@ -7,6 +7,8 @@ import sys
 import glob
 import codecs
 from collections import namedtuple
+import sqlite3
+import datetime
 
 from Resources.ui_main_senior import Ui_senior_MainWindow
 from Libs.thumbnails import PreviewDelegate, PreviewModel
@@ -79,7 +81,7 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
 
     def show_image(self):
         self.pictureLabel.setPixmap(self.images[self.index].pixmap)
-    
+
     def show_thumbnails(self):
         for n, fn in enumerate(glob.glob(f"{self.images_directory_path}/*.jpg")):
             image = QImage(fn)
@@ -120,6 +122,7 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
         self.images[self.index].comment = self.commentEdit.text()
         attrs = vars(self.images[self.index])
         print(', '.join("%s: %s" % item for item in attrs.items()))
+        self.save_to_db()
 
     def reset(self):
         self.images = []
@@ -128,6 +131,21 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
         self.thumbnailsView.setItemDelegate(self.delegate)
         self.model = PreviewModel()
         self.thumbnailsView.setModel(self.model)
+
+    def save_to_db(self):
+        connection = sqlite3.connect("annotation.db")
+        cursor = connection.cursor()
+        pollen_info = [self.images[self.index].path,
+                       self.images[self.index].class_,
+                       self.images[self.index].confidence,
+                       self.images[self.index].comment,
+                       self.images[self.index].user,
+                       self.images[self.index].is_senior,
+                       datetime.datetime.now()]
+        query = 'INSERT INTO annotation (path, class, confidence, comment, user, is_senior, time_stamp) VALUES (?,?,?,?,?,?,?)'
+        cursor.execute(query, pollen_info)
+        connection.commit()
+        connection.close()
 
 
 if __name__ == '__main__':

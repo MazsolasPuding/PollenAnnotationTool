@@ -26,6 +26,6 @@ class Pollen():
             if isinstance(data, bytes):
                 data = data.decode()
             # print(f"{tag:15}: {data}")
-            self.metadata[tag_id] = data
+            self.metadata[tag] = data
 
 
