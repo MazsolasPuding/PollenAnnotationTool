@@ -21,7 +21,8 @@ from PySide6.QtWidgets import (QApplication, QDockWidget, QFrame, QHBoxLayout,
     QListWidgetItem, QMainWindow, QMenu, QMenuBar,
     QPushButton, QSizePolicy, QSlider, QSpacerItem,
     QStatusBar, QTableView, QTableWidget, QTableWidgetItem,
-    QToolBar, QTreeView, QVBoxLayout, QWidget)
+    QToolBar, QTreeWidget, QTreeWidgetItem, QVBoxLayout,
+    QWidget)
 import resources_rc
 
 class Ui_senior_MainWindow(object):
@@ -71,6 +72,21 @@ class Ui_senior_MainWindow(object):
         icon7 = QIcon()
         icon7.addFile(u":/Icons/aboutQtIcon.png", QSize(), QIcon.Normal, QIcon.Off)
         self.actionAboutQt.setIcon(icon7)
+        self.actionZoom_In = QAction(senior_MainWindow)
+        self.actionZoom_In.setObjectName(u"actionZoom_In")
+        icon8 = QIcon()
+        icon8.addFile(u":/Icons/zoom-in.png", QSize(), QIcon.Normal, QIcon.Off)
+        self.actionZoom_In.setIcon(icon8)
+        self.actionZoom_Out = QAction(senior_MainWindow)
+        self.actionZoom_Out.setObjectName(u"actionZoom_Out")
+        icon9 = QIcon()
+        icon9.addFile(u":/Icons/zoom-out.png", QSize(), QIcon.Normal, QIcon.Off)
+        self.actionZoom_Out.setIcon(icon9)
+        self.actionFit_Window = QAction(senior_MainWindow)
+        self.actionFit_Window.setObjectName(u"actionFit_Window")
+        icon10 = QIcon()
+        icon10.addFile(u":/Icons/fit-window.png", QSize(), QIcon.Normal, QIcon.Off)
+        self.actionFit_Window.setIcon(icon10)
         self.centralwidget = QWidget(senior_MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralwidget.setStyleSheet(u"QWidget#centralwidget{\n"
@@ -148,7 +164,10 @@ class Ui_senior_MainWindow(object):
 
         self.verticalLayout_4.addWidget(self.label_10)
 
-        self.directoryView = QTreeView(self.dockWidgetContents_2)
+        self.directoryView = QTreeWidget(self.dockWidgetContents_2)
+        __qtreewidgetitem = QTreeWidgetItem()
+        __qtreewidgetitem.setText(0, u"1");
+        self.directoryView.setHeaderItem(__qtreewidgetitem)
         self.directoryView.setObjectName(u"directoryView")
 
         self.verticalLayout_4.addWidget(self.directoryView)
@@ -165,10 +184,10 @@ class Ui_senior_MainWindow(object):
 
         self.verticalLayout_4.addWidget(self.label_5)
 
-        self.tableWidget = QTableWidget(self.dockWidgetContents_2)
-        self.tableWidget.setObjectName(u"tableWidget")
+        self.metadataTableWidget = QTableWidget(self.dockWidgetContents_2)
+        self.metadataTableWidget.setObjectName(u"metadataTableWidget")
 
-        self.verticalLayout_4.addWidget(self.tableWidget)
+        self.verticalLayout_4.addWidget(self.metadataTableWidget)
 
         self.metadataDock.setWidget(self.dockWidgetContents_2)
         senior_MainWindow.addDockWidget(Qt.LeftDockWidgetArea, self.metadataDock)
@@ -320,6 +339,9 @@ class Ui_senior_MainWindow(object):
         self.menuFile.addAction(self.actionQuit)
         self.menuView.addAction(self.actionPrevious)
         self.menuView.addAction(self.actionNext)
+        self.menuView.addAction(self.actionFit_Window)
+        self.menuView.addAction(self.actionZoom_In)
+        self.menuView.addAction(self.actionZoom_Out)
         self.menuHelp.addAction(self.actionAbout)
         self.menuHelp.addAction(self.actionAboutQt)
         self.toolBar.addAction(self.actionOpen_Dir)
@@ -329,7 +351,9 @@ class Ui_senior_MainWindow(object):
         self.toolBar.addAction(self.actionPrevious)
         self.toolBar.addAction(self.actionNext)
         self.toolBar.addSeparator()
-        self.toolBar.addAction(self.actionQuit)
+        self.toolBar.addAction(self.actionFit_Window)
+        self.toolBar.addAction(self.actionZoom_In)
+        self.toolBar.addAction(self.actionZoom_Out)
 
         self.retranslateUi(senior_MainWindow)
 
@@ -345,6 +369,9 @@ class Ui_senior_MainWindow(object):
         self.actionNext.setText(QCoreApplication.translate("senior_MainWindow", u"Next", None))
         self.actionAbout.setText(QCoreApplication.translate("senior_MainWindow", u"About", None))
         self.actionAboutQt.setText(QCoreApplication.translate("senior_MainWindow", u"AboutQt", None))
+        self.actionZoom_In.setText(QCoreApplication.translate("senior_MainWindow", u"Zoom In", None))
+        self.actionZoom_Out.setText(QCoreApplication.translate("senior_MainWindow", u"Zoom Out", None))
+        self.actionFit_Window.setText(QCoreApplication.translate("senior_MainWindow", u"Fit Window", None))
         self.pictureLabel.setText(QCoreApplication.translate("senior_MainWindow", u"Open a Directory to show images.", None))
         self.menuFile.setTitle(QCoreApplication.translate("senior_MainWindow", u"File", None))
         self.menuView.setTitle(QCoreApplication.translate("senior_MainWindow", u"View", None))

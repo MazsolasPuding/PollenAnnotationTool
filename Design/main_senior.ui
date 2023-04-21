@@ -71,6 +71,9 @@ font: 20pt &quot;SansSerif&quot;;</string>
     </property>
     <addaction name="actionPrevious"/>
     <addaction name="actionNext"/>
+    <addaction name="actionFit_Window"/>
+    <addaction name="actionZoom_In"/>
+    <addaction name="actionZoom_Out"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -173,7 +176,13 @@ border: 1px solid black;
       </widget>
      </item>
      <item>
-      <widget class="QTreeView" name="directoryView"/>
+      <widget class="QTreeWidget" name="directoryView">
+       <column>
+        <property name="text">
+         <string notr="true">1</string>
+        </property>
+       </column>
+      </widget>
      </item>
      <item>
       <widget class="Line" name="line">
@@ -190,7 +199,7 @@ border: 1px solid black;
       </widget>
      </item>
      <item>
-      <widget class="QTableWidget" name="tableWidget"/>
+      <widget class="QTableWidget" name="metadataTableWidget"/>
      </item>
     </layout>
    </widget>
@@ -482,7 +491,9 @@ border: 1px solid black;
    <addaction name="actionPrevious"/>
    <addaction name="actionNext"/>
    <addaction name="separator"/>
-   <addaction name="actionQuit"/>
+   <addaction name="actionFit_Window"/>
+   <addaction name="actionZoom_In"/>
+   <addaction name="actionZoom_Out"/>
   </widget>
   <action name="actionOpen_Dir">
    <property name="icon">
@@ -545,6 +556,33 @@ border: 1px solid black;
    </property>
    <property name="text">
     <string>AboutQt</string>
+   </property>
+  </action>
+  <action name="actionZoom_In">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/Icons/zoom-in.png</normaloff>:/Icons/zoom-in.png</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom In</string>
+   </property>
+  </action>
+  <action name="actionZoom_Out">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/Icons/zoom-out.png</normaloff>:/Icons/zoom-out.png</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom Out</string>
+   </property>
+  </action>
+  <action name="actionFit_Window">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/Icons/fit-window.png</normaloff>:/Icons/fit-window.png</iconset>
+   </property>
+   <property name="text">
+    <string>Fit Window</string>
    </property>
   </action>
  </widget>

@@ -1,14 +1,15 @@
-from PySide6.QtWidgets import QApplication, QDialog, QWidget, QMainWindow, QFileDialog, QMessageBox
+from PySide6.QtWidgets import QApplication, QDialog, QWidget, QMainWindow, QFileDialog, QMessageBox, QTableWidgetItem, QTreeWidgetItem
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QImage, QPixmap
 
-import os.path
+import os
 import sys
 import glob
 import codecs
-from collections import namedtuple
 import sqlite3
 import datetime
+from collections import namedtuple
+import xml.etree.ElementTree as ET
 
 from Resources.ui_main_senior import Ui_senior_MainWindow
 from Libs.thumbnails import PreviewDelegate, PreviewModel
@@ -29,7 +30,7 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
         self.user = user
         self.is_senior = is_senior
         self.index = 0
-
+        self.current_pollen = ""
         # Load Pollen classes
         self.load_predefined_classes(self.predef_classes_path)
 
@@ -53,6 +54,10 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
         self.actionSave.triggered.connect(self.save)
         self.actionAbout.triggered.connect(self.about)
         self.actionAboutQt.triggered.connect(self.aboutQt)
+        self.actionZoom_In.triggered.connect(self.zoom_in)
+        self.actionZoom_Out.triggered.connect(self.zoom_out)
+        self.actionFit_Window.triggered.connect(self.fit_window)
+
         self.pollenListWidget.itemClicked.connect(self.class_selected)
         self.nextButton.clicked.connect(self.next)
         self.prevButton.clicked.connect(self.previous)
@@ -67,6 +72,10 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
         self.model = PreviewModel()
         self.thumbnailsView.setModel(self.model)
 
+        # Set Table widget
+        self.metadataTableWidget.setColumnCount(2)
+        
+
 
     def quit(self):
         self.app.quit()
@@ -80,8 +89,13 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
     def load_images(self):
         self.reset()
         self.open_dir_dialog()
+        self.load_subdirectory_tree(self.directoryView)
+        self.create_pollen_objects()
+        self.show_image()
+        self.show_thumbnails()
 
-        for n, fn in enumerate(glob.glob(f"{self.images_directory_path}/*.jpg")):
+    def create_pollen_objects(self):
+        for n, fn in enumerate(glob.glob(f"{self.images_directory_path}/*.jp*g")):
             p = Pollen()
             p.path = fn
             p.user = self.user
@@ -92,21 +106,63 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
             except:
                 print(f"No metadata at {fn}")
             self.images.append(p)
-        
-        self.show_image()
-        self.show_thumbnails()
-
+        self.current_pollen = self.images[self.index]
 
     def open_dir_dialog(self):
         self.images_directory_path = QFileDialog.getExistingDirectory(self,
                                                                     '%s - Open Directory' % __appname__, "",
                                                                     QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
 
+    def load_subdirectory_tree(self, tree_widget):
+        root_element = ET.Element("directory_tree")
+        for root, dirs, files in os.walk(self.images_directory_path):
+            dir_element = ET.SubElement(root_element, "directory", name=os.path.basename(root))
+            for f in files:
+                ET.SubElement(dir_element, "file", name=f)
+
+        # clear the tree widget before populating it
+        tree_widget.clear()
+
+        # create the root item
+        root_item = QTreeWidgetItem(tree_widget)
+        root_item.setText(0, os.path.basename(self.images_directory_path))
+
+        # recursively add child items for each directory and file in the tree
+        self._add_child_items(root_element, root_item)
+
+    def _add_child_items(self, xml_element, parent_item):
+        # iterate over the child elements of the XML element
+        for child_element in xml_element:
+            # create an item for the directory or file
+            item = QTreeWidgetItem(parent_item)
+            item.setText(0, child_element.get('name'))
+            if child_element.tag == 'directory':
+                # if the child element is a directory, recursively add child items
+                self._add_child_items(child_element, item)
+
+
     def show_image(self):
-        self.pictureLabel.setPixmap(self.images[self.index].pixmap)
+        current_image = self.images[self.index].pixmap
+        size = self.pictureLabel.size()
+        scaled_image = current_image.scaled(size, aspectMode=Qt.KeepAspectRatio)
+        self.pictureLabel.setPixmap(scaled_image)
+        self.load_metadata_to_table()
+
+    def load_metadata_to_table(self):
+        metadata = self.current_pollen.metadata
+        if not metadata:
+            return
+        self.metadataTableWidget.setRowCount(len(metadata))
+        col = 0
+        for k, v in metadata.items():
+            self.metadataTableWidget.setItem(col, 0, QTableWidgetItem(str(k)))
+            self.metadataTableWidget.setItem(col, 1, QTableWidgetItem(str(v)))
+            col += 1
+
+        
 
     def show_thumbnails(self):
-        for n, fn in enumerate(glob.glob(f"{self.images_directory_path}/*.jpg")):
+        for n, fn in enumerate(glob.glob(f"{self.images_directory_path}/*.jp*g")):
             image = QImage(fn)
             item = preview(n, fn, image)
             self.model.previews.append(item)
@@ -126,24 +182,36 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
         self.pollenListWidget.addItems(self.label_list)
 
     def class_selected(self, item):
-        self.images[self.index].class_ = item.text()
+        self.current_pollen.class_ = item.text()
 
     def previous(self):
         self.index -= 1
+        self.current_pollen = self.images[self.index]
         self.show_image()
 
     def next(self):
         self.index += 1
         try:
+            self.current_pollen = self.images[self.index]
             self.show_image()
         except IndexError:
             self.index = 0
+            self.current_pollen = self.images[self.index]
             self.show_image()
 
+    def zoom_in(self):
+        pass
+
+    def zoom_out(self):
+        pass
+
+    def fit_window(self):
+        pass
+
     def save(self):
-        self.images[self.index].confidence = self.confidenceSlider.value()
-        self.images[self.index].comment = self.commentEdit.text()
-        attrs = vars(self.images[self.index])
+        self.current_pollen.confidence = self.confidenceSlider.value()
+        self.current_pollen.comment = self.commentEdit.text()
+        attrs = vars(self.current_pollen)
         print(', '.join("%s: %s" % item for item in attrs.items()))
         self.save_to_db()
 
@@ -158,13 +226,13 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
     def save_to_db(self):
         connection = sqlite3.connect("annotation.db")
         cursor = connection.cursor()
-        pollen_info = [self.images[self.index].path,
-                       self.images[self.index].class_,
-                       self.images[self.index].confidence,
-                       self.images[self.index].comment,
-                       self.images[self.index].user,
-                       self.images[self.index].is_senior,
-                       datetime.datetime.now()]
+        pollen_info = [self.current_pollen.path,
+                       self.current_pollen.class_,
+                       self.current_pollen.confidence,
+                       self.current_pollen.comment,
+                       self.current_pollen.user,
+                       self.current_pollen.is_senior,
+                       datetime.datetime.now().strftime("%Y-%m-%d %H:%M")]
         query = 'INSERT INTO annotation (path, class, confidence, comment, user, is_senior, time_stamp) VALUES (?,?,?,?,?,?,?)'
         cursor.execute(query, pollen_info)
         connection.commit()
