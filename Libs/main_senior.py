@@ -31,8 +31,11 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
         self.is_senior = is_senior
         self.index = 0
         self.current_pollen = ""
+        self.saved = False
+
         # Load Pollen classes
         self.load_predefined_classes(self.predef_classes_path)
+        self.toggle_all_actions(False)
 
         # Add Menu actions
         self.label_dock_view_action = self.labellingDock.toggleViewAction()
@@ -44,7 +47,6 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
         self.thumbnail_dock_view_action = self.thumbnailDock.toggleViewAction()
         self.thumbnail_dock_view_action.setText("Thumbnail Dock")
         self.menuView.addAction(self.thumbnail_dock_view_action)
-        
 
         # Set actions
         self.actionQuit.triggered.connect(self.quit)
@@ -74,6 +76,9 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
 
         # Set Table widget
         self.metadataTableWidget.setColumnCount(2)
+        self.metadataTableWidget.horizontalHeader().hide()
+        self.directoryView.setHeaderHidden(True)
+        self.saveButton.setEnabled(False)
         
 
 
@@ -91,8 +96,10 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
         self.open_dir_dialog()
         self.load_subdirectory_tree(self.directoryView)
         self.create_pollen_objects()
-        self.show_image()
-        self.show_thumbnails()
+        if self.images:
+            self.show_image()
+            self.show_thumbnails()
+            self.toggle_all_actions()
 
     def create_pollen_objects(self):
         for n, fn in enumerate(glob.glob(f"{self.images_directory_path}/*.jp*g")):
@@ -187,17 +194,25 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
     def previous(self):
         self.index -= 1
         self.current_pollen = self.images[self.index]
+        self._reset_style_sheet()
         self.show_image()
 
     def next(self):
         self.index += 1
-        try:
-            self.current_pollen = self.images[self.index]
-            self.show_image()
-        except IndexError:
+        if  len(self.images) == self.index:
             self.index = 0
-            self.current_pollen = self.images[self.index]
-            self.show_image()
+            self.finished_folder()
+        self.current_pollen = self.images[self.index]
+        self._reset_style_sheet()
+        self.show_image()
+
+    def _reset_style_sheet(self):
+        self.pictureLabel.setStyleSheet("background-color:rgb(216, 246, 255); font: 20pt 'SansSerif';")
+        self.saveButton.setStyleSheet("")
+        
+    def finished_folder(self):
+        QMessageBox.information(self, "Finished", "You have labelled all pictures in this folder.")
+        self.reset()
 
     def zoom_in(self):
         pass
@@ -213,7 +228,12 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
         self.current_pollen.comment = self.commentEdit.text()
         attrs = vars(self.current_pollen)
         print(', '.join("%s: %s" % item for item in attrs.items()))
-        self.save_to_db()
+        if self.save_to_db():
+            self.saved = True
+            self.nextButton.setEnabled(True)
+            self.pictureLabel.setStyleSheet("background-color:rgb(89, 255, 103)")
+            self.saveButton.setStyleSheet("background-color:rgb(89, 255, 103)")
+
 
     def reset(self):
         self.images = []
@@ -222,6 +242,21 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
         self.thumbnailsView.setItemDelegate(self.delegate)
         self.model = PreviewModel()
         self.thumbnailsView.setModel(self.model)
+        self.toggle_all_actions(False)
+        self.pictureLabel.setText("Open a Directory to show images.")
+
+    def toggle_all_actions(self, enable=True):
+        self.saveButton.setEnabled(enable)
+        self.nextButton.setEnabled(enable)
+        self.prevButton.setEnabled(enable)
+        self.actionNext.setEnabled(enable)
+        self.actionPrevious.setEnabled(enable)
+        self.actionSave.setEnabled(enable)
+        self.confidenceSlider.setEnabled(enable)
+        self.commentEdit.setEnabled(enable)
+        self.pollenListWidget.setEnabled(enable)
+
+    
 
     def save_to_db(self):
         connection = sqlite3.connect("annotation.db")
@@ -237,6 +272,7 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
         cursor.execute(query, pollen_info)
         connection.commit()
         connection.close()
+        return True
 
 
 if __name__ == '__main__':

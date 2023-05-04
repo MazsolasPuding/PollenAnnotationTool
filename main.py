@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QApplication, QDialog, QWidget, QStackedWidget, QLineEdit
 import sys
+import base64
 import sqlite3
 from Resources.ui_welcome import Ui_Welcome
 from Libs.main_senior import MainSenior
@@ -9,7 +10,6 @@ from Resources.ui_create_account import Ui_Create_account
 """
 Mac init.
 """
-
 
 
 class Welcome(QDialog, Ui_Welcome):
@@ -37,7 +37,7 @@ class CreateAccount(QDialog, Ui_Create_account):
         super().__init__()
         self.setupUi(self)
         self.widget = widget
-        
+
         self.passwordEdit.setEchoMode(QLineEdit.Password)
         self.passwordEdit_2.setEchoMode(QLineEdit.Password)
         self.createButton.clicked.connect(self.create_account)
@@ -65,7 +65,8 @@ class CreateAccount(QDialog, Ui_Create_account):
         try:
             connection = sqlite3.connect("users.db")
             cursor = connection.cursor()
-            user_info = [username, password, senior]
+            encoded = base64.b64encode(password.encode("utf-8"))
+            user_info = [username, encoded, senior]
             query = 'INSERT INTO login_info (username, password, senior) VALUES (?,?,?)'
             cursor.execute(query, user_info)
         except sqlite3.IntegrityError:
@@ -112,7 +113,7 @@ class Login(QDialog, Ui_Login):
             fetched = cursor.fetchall()
             fetched_password = fetched[0][0]
             fetched_is_senior = fetched[0][1]
-            if fetched_password != password:
+            if fetched_password != base64.b64encode(password.encode("utf-8")):
                 self.errorLabel.setText("Invalid password")
                 return
             print("Successfully logged in.")

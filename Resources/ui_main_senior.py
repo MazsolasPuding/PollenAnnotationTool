@@ -281,6 +281,7 @@ class Ui_senior_MainWindow(object):
         self.saveButton = QPushButton(self.dockWidgetContents_3)
         self.saveButton.setObjectName(u"saveButton")
         self.saveButton.setMinimumSize(QSize(0, 50))
+        self.saveButton.setStyleSheet(u"")
         self.saveButton.setIcon(icon2)
         self.saveButton.setIconSize(QSize(20, 20))
 
@@ -339,9 +340,6 @@ class Ui_senior_MainWindow(object):
         self.menuFile.addAction(self.actionQuit)
         self.menuView.addAction(self.actionPrevious)
         self.menuView.addAction(self.actionNext)
-        self.menuView.addAction(self.actionFit_Window)
-        self.menuView.addAction(self.actionZoom_In)
-        self.menuView.addAction(self.actionZoom_Out)
         self.menuHelp.addAction(self.actionAbout)
         self.menuHelp.addAction(self.actionAboutQt)
         self.toolBar.addAction(self.actionOpen_Dir)
@@ -351,9 +349,6 @@ class Ui_senior_MainWindow(object):
         self.toolBar.addAction(self.actionPrevious)
         self.toolBar.addAction(self.actionNext)
         self.toolBar.addSeparator()
-        self.toolBar.addAction(self.actionFit_Window)
-        self.toolBar.addAction(self.actionZoom_In)
-        self.toolBar.addAction(self.actionZoom_Out)
 
         self.retranslateUi(senior_MainWindow)
 
