@@ -11,14 +11,14 @@ import datetime
 from collections import namedtuple
 import xml.etree.ElementTree as ET
 
-from Resources.ui_main_senior import Ui_senior_MainWindow
+from Resources.ui_main_window import Ui_MainWindow
 from Libs.thumbnails import PreviewDelegate, PreviewModel
 from Libs.pollen import Pollen
 
 __appname__ = "Pollen"
 preview = namedtuple("preview", ['id', 'path', 'image'])
 
-class MainSenior(QMainWindow, Ui_senior_MainWindow):
+class MainSenior(QMainWindow, Ui_MainWindow):
     def __init__(self, app, user, is_senior):
         super().__init__()
         self.setupUi(self)
@@ -81,7 +81,6 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
         self.saveButton.setEnabled(False)
         
 
-
     def quit(self):
         self.app.quit()
 
@@ -100,6 +99,10 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
             self.show_image()
             self.show_thumbnails()
             self.toggle_all_actions()
+            self.actionSave.setEnabled(False)
+            self.saveButton.setEnabled(False)
+            self.prevButton.setEnabled(False)
+            self.actionPrevious.setEnabled(False)
 
     def create_pollen_objects(self):
         for n, fn in enumerate(glob.glob(f"{self.images_directory_path}/*.jp*g")):
@@ -113,7 +116,10 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
             except:
                 print(f"No metadata at {fn}")
             self.images.append(p)
-        self.current_pollen = self.images[self.index]
+        try:
+            self.current_pollen = self.images[self.index]
+        except IndexError:
+            QMessageBox.information(self, "Empty Directory", "The current directory does not contain any pictures.")
 
     def open_dir_dialog(self):
         self.images_directory_path = QFileDialog.getExistingDirectory(self,
@@ -164,9 +170,7 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
         for k, v in metadata.items():
             self.metadataTableWidget.setItem(col, 0, QTableWidgetItem(str(k)))
             self.metadataTableWidget.setItem(col, 1, QTableWidgetItem(str(v)))
-            col += 1
-
-        
+            col += 1        
 
     def show_thumbnails(self):
         for n, fn in enumerate(glob.glob(f"{self.images_directory_path}/*.jp*g")):
@@ -189,30 +193,57 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
         self.pollenListWidget.addItems(self.label_list)
 
     def class_selected(self, item):
-        self.current_pollen.class_ = item.text()
+        if self.current_pollen.labelled == False:
+            self.current_pollen.class_ = item.text()
+            self.saveButton.setEnabled(True)
+            self.actionSave.setEnabled(True)
 
     def previous(self):
         self.index -= 1
         self.current_pollen = self.images[self.index]
-        self._reset_style_sheet()
+        self._keep_in_range()
+        self._set_style_sheet(self.current_pollen.labelled)
         self.show_image()
 
     def next(self):
         self.index += 1
-        if  len(self.images) == self.index:
-            self.index = 0
-            self.finished_folder()
         self.current_pollen = self.images[self.index]
-        self._reset_style_sheet()
+        self._keep_in_range()
+        self._set_style_sheet(self.current_pollen.labelled)
         self.show_image()
+    
+    def _keep_in_range(self):
+        if self.index >= len(self.images) - 1:
+            self.nextButton.setEnabled(False)
+            self.actionNext.setEnabled(False)
+        elif self.index <= 0:
+            self.prevButton.setEnabled(False)
+            self.actionPrevious.setEnabled(False)
+        else:
+            self.nextButton.setEnabled(True)
+            self.actionNext.setEnabled(True)
+            self.prevButton.setEnabled(True)
+            self.actionPrevious.setEnabled(True)
 
-    def _reset_style_sheet(self):
-        self.pictureLabel.setStyleSheet("background-color:rgb(216, 246, 255); font: 20pt 'SansSerif';")
-        self.saveButton.setStyleSheet("")
+    def _set_style_sheet(self, green=False):
+        if green:
+            self.pictureLabel.setStyleSheet("background-color:rgb(89, 255, 103)")
+            self.saveButton.setStyleSheet("background-color:rgb(89, 255, 103)")
+            self.actionSave.setEnabled(False)
+            self.saveButton.setEnabled(False)
+        else:
+            self.pictureLabel.setStyleSheet("background-color:rgb(216, 246, 255); font: 20pt 'SansSerif';")
+            self.saveButton.setStyleSheet("")
+
+    def _is_remaining(self):
+        for pollen in self.images:
+            if not pollen.labelled:
+                return True
+        return False
         
     def finished_folder(self):
-        QMessageBox.information(self, "Finished", "You have labelled all pictures in this folder.")
         self.reset()
+        QMessageBox.information(self, "Finished", "You have labelled all pictures in this folder.")
 
     def zoom_in(self):
         pass
@@ -226,14 +257,34 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
     def save(self):
         self.current_pollen.confidence = self.confidenceSlider.value()
         self.current_pollen.comment = self.commentEdit.text()
-        attrs = vars(self.current_pollen)
-        print(', '.join("%s: %s" % item for item in attrs.items()))
-        if self.save_to_db():
-            self.saved = True
-            self.nextButton.setEnabled(True)
-            self.pictureLabel.setStyleSheet("background-color:rgb(89, 255, 103)")
-            self.saveButton.setStyleSheet("background-color:rgb(89, 255, 103)")
+        if not self.save_to_db():
+            QMessageBox.critical(self, "Database Error", "Could not write to database, plase try again or restart the application.")
+            return
+        self.saved = True
+        self.current_pollen.labelled = True
+        self._set_style_sheet(True)
+        print(self.current_pollen)
+        if not self._is_remaining():
+            self.finished_folder()
 
+    def save_to_db(self):
+        connection = sqlite3.connect("annotation.db")
+        cursor = connection.cursor()
+        pollen_info = [self.current_pollen.path,
+                       self.current_pollen.class_,
+                       self.current_pollen.confidence,
+                       self.current_pollen.comment,
+                       self.current_pollen.user,
+                       self.current_pollen.is_senior,
+                       datetime.datetime.now().strftime("%Y-%m-%d %H:%M")]
+        try:
+            query = 'INSERT INTO annotation (path, class, confidence, comment, user, is_senior, time_stamp) VALUES (?,?,?,?,?,?,?)'
+            cursor.execute(query, pollen_info)
+            connection.commit()
+            connection.close()
+            return True
+        except sqlite3.OperationalError or sqlite3.IntegrityError:
+            return False
 
     def reset(self):
         self.images = []
@@ -242,6 +293,7 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
         self.thumbnailsView.setItemDelegate(self.delegate)
         self.model = PreviewModel()
         self.thumbnailsView.setModel(self.model)
+        self._set_style_sheet(False)
         self.toggle_all_actions(False)
         self.pictureLabel.setText("Open a Directory to show images.")
 
@@ -255,24 +307,6 @@ class MainSenior(QMainWindow, Ui_senior_MainWindow):
         self.confidenceSlider.setEnabled(enable)
         self.commentEdit.setEnabled(enable)
         self.pollenListWidget.setEnabled(enable)
-
-    
-
-    def save_to_db(self):
-        connection = sqlite3.connect("annotation.db")
-        cursor = connection.cursor()
-        pollen_info = [self.current_pollen.path,
-                       self.current_pollen.class_,
-                       self.current_pollen.confidence,
-                       self.current_pollen.comment,
-                       self.current_pollen.user,
-                       self.current_pollen.is_senior,
-                       datetime.datetime.now().strftime("%Y-%m-%d %H:%M")]
-        query = 'INSERT INTO annotation (path, class, confidence, comment, user, is_senior, time_stamp) VALUES (?,?,?,?,?,?,?)'
-        cursor.execute(query, pollen_info)
-        connection.commit()
-        connection.close()
-        return True
 
 
 if __name__ == '__main__':

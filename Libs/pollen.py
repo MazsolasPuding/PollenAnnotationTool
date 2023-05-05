@@ -6,14 +6,13 @@ class Pollen():
         # Basic Pollen properties
         self.pixmap = ""
         self.path = ""
-        # self.path = "C:/users/horva/Pictures/IMG_1234.jpeg"
         self.class_ = ""
         self.confidence = 0
         self.comment = ""
         self.user = ""
         self.is_senior = False
         self.metadata = {}
-
+        self.labelled = False
 
     def get_image_metadata(self):
         self.image = Image.open(self.path)
@@ -26,5 +25,9 @@ class Pollen():
             if isinstance(data, bytes):
                 data = data.decode()
             self.metadata[tag] = data
+
+    def __str__(self):
+        attrs = vars(self)
+        return (', '.join("%s: %s" % item for item in attrs.items()))
 
 
