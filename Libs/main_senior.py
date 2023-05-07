@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QApplication, QDialog, QWidget, QMainWindow, QFileDialog, QMessageBox, QTableWidgetItem, QTreeWidgetItem
+from PySide6.QtWidgets import QApplication, QDialog, QWidget, QMainWindow, QFileDialog, QMessageBox, QTableWidgetItem, QTreeWidgetItem, QTabWidget
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QImage, QPixmap
 
@@ -30,8 +30,12 @@ class MainSenior(QMainWindow, Ui_MainWindow):
         self.user = user
         self.is_senior = is_senior
         self.index = 0
+        # self.index = 0
         self.current_pollen = ""
         self.saved = False
+        self.names_loaded = False
+        self.loaded_data = {}
+        self.mode = "folder"
 
         # Load Pollen classes
         self.load_predefined_classes(self.predef_classes_path)
@@ -77,8 +81,11 @@ class MainSenior(QMainWindow, Ui_MainWindow):
         # Set Table widget
         self.metadataTableWidget.setColumnCount(2)
         self.metadataTableWidget.horizontalHeader().hide()
-        self.directoryView.setHeaderHidden(True)
         self.saveButton.setEnabled(False)
+
+        # Review Page
+        self.tabWidget.tabBarClicked.connect(self.tab_selected)
+        self.load_annotations_Button.clicked.connect(self.load_data_from_db)
         
 
     def quit(self):
@@ -90,22 +97,30 @@ class MainSenior(QMainWindow, Ui_MainWindow):
     def aboutQt(self):
         QApplication.aboutQt()
 
-    def load_images(self):
+    def load_images(self, *,mode='folder'):
         self.reset()
-        self.open_dir_dialog()
-        self.load_subdirectory_tree(self.directoryView)
-        self.create_pollen_objects()
+        print(mode)
+        if mode == 'folder':
+            self.open_dir_dialog()
+        self.create_pollen_objects(mode)
         if self.images:
             self.show_image()
-            self.show_thumbnails()
+            self.show_thumbnails(mode)
             self.toggle_all_actions()
             self.actionSave.setEnabled(False)
             self.saveButton.setEnabled(False)
             self.prevButton.setEnabled(False)
             self.actionPrevious.setEnabled(False)
 
-    def create_pollen_objects(self):
-        for n, fn in enumerate(glob.glob(f"{self.images_directory_path}/*.jp*g")):
+
+    def create_pollen_objects(self, mode):
+        if mode == "folder":
+            paths = glob.glob(f"{self.images_directory_path}/*.jp*g")
+        elif mode == "DB":
+            paths = []
+            for row in self.loaded_data:
+                paths.append(row[0])
+        for n, fn in enumerate(paths):
             p = Pollen()
             p.path = fn
             p.user = self.user
@@ -115,6 +130,13 @@ class MainSenior(QMainWindow, Ui_MainWindow):
                 p.get_image_metadata()
             except:
                 print(f"No metadata at {fn}")
+            if mode == "DB":
+                p.previous_class = self.loaded_data[self.index][1]
+                p.previous_confidence = self.loaded_data[self.index][2]
+                p.previous_comment = self.loaded_data[self.index][3]
+                p.previous_user = self.loaded_data[self.index][4]
+                p.previous_is_senior = self.loaded_data[self.index][5]
+                p.previous_timestamp = self.loaded_data[self.index][6]
             self.images.append(p)
         try:
             self.current_pollen = self.images[self.index]
@@ -159,11 +181,15 @@ class MainSenior(QMainWindow, Ui_MainWindow):
         size = self.pictureLabel.size()
         scaled_image = current_image.scaled(size, aspectMode=Qt.KeepAspectRatio)
         self.pictureLabel.setPixmap(scaled_image)
+        size = self.pictureLabel_2.size()
+        scaled_image = current_image.scaled(size, aspectMode=Qt.KeepAspectRatio)
+        self.pictureLabel_2.setPixmap(scaled_image)
         self.load_metadata_to_table()
 
     def load_metadata_to_table(self):
         metadata = self.current_pollen.metadata
         if not metadata:
+            self.metadataTableWidget.clear()
             return
         self.metadataTableWidget.setRowCount(len(metadata))
         col = 0
@@ -172,8 +198,14 @@ class MainSenior(QMainWindow, Ui_MainWindow):
             self.metadataTableWidget.setItem(col, 1, QTableWidgetItem(str(v)))
             col += 1        
 
-    def show_thumbnails(self):
-        for n, fn in enumerate(glob.glob(f"{self.images_directory_path}/*.jp*g")):
+    def show_thumbnails(self, mode):
+        if mode == "folder":
+            paths = glob.glob(f"{self.images_directory_path}/*.jp*g")
+        elif mode == "DB":
+            paths = []
+            for row in self.loaded_data:
+                paths.append(row[0])
+        for n, fn in enumerate(paths):
             image = QImage(fn)
             item = preview(n, fn, image)
             self.model.previews.append(item)
@@ -204,6 +236,8 @@ class MainSenior(QMainWindow, Ui_MainWindow):
         self._keep_in_range()
         self._set_style_sheet(self.current_pollen.labelled)
         self.show_image()
+        if self.mode == "DB":
+            self.load_data_to_ui()
 
     def next(self):
         self.index += 1
@@ -211,6 +245,8 @@ class MainSenior(QMainWindow, Ui_MainWindow):
         self._keep_in_range()
         self._set_style_sheet(self.current_pollen.labelled)
         self.show_image()
+        if self.mode == "DB":
+            self.load_data_to_ui()
     
     def _keep_in_range(self):
         if self.index >= len(self.images) - 1:
@@ -228,11 +264,13 @@ class MainSenior(QMainWindow, Ui_MainWindow):
     def _set_style_sheet(self, green=False):
         if green:
             self.pictureLabel.setStyleSheet("background-color:rgb(89, 255, 103)")
+            self.pictureLabel_2.setStyleSheet("background-color:rgb(89, 255, 103)")
             self.saveButton.setStyleSheet("background-color:rgb(89, 255, 103)")
             self.actionSave.setEnabled(False)
             self.saveButton.setEnabled(False)
         else:
             self.pictureLabel.setStyleSheet("background-color:rgb(216, 246, 255); font: 20pt 'SansSerif';")
+            self.pictureLabel_2.setStyleSheet("background-color:rgb(216, 246, 255); font: 20pt 'SansSerif';")
             self.saveButton.setStyleSheet("")
 
     def _is_remaining(self):
@@ -260,6 +298,11 @@ class MainSenior(QMainWindow, Ui_MainWindow):
         if not self.save_to_db():
             QMessageBox.critical(self, "Database Error", "Could not write to database, plase try again or restart the application.")
             return
+        if self.mode == "DB":
+            try:
+                self.save_review_to_db()
+            except sqlite3.OperationalError or sqlite3.IntegrityError:
+                QMessageBox.critical(self, "Database Error", "Could not write to database, plase try again or restart the application.")
         self.saved = True
         self.current_pollen.labelled = True
         self._set_style_sheet(True)
@@ -278,13 +321,16 @@ class MainSenior(QMainWindow, Ui_MainWindow):
                        self.current_pollen.is_senior,
                        datetime.datetime.now().strftime("%Y-%m-%d %H:%M")]
         try:
-            query = 'INSERT INTO annotation (path, class, confidence, comment, user, is_senior, time_stamp) VALUES (?,?,?,?,?,?,?)'
+            query = 'INSERT INTO annotation (path, class, confidence, comment, user, is_senior, timestamp) VALUES (?,?,?,?,?,?,?)'
             cursor.execute(query, pollen_info)
             connection.commit()
             connection.close()
             return True
         except sqlite3.OperationalError or sqlite3.IntegrityError:
             return False
+        
+    def save_review_to_db(self):
+        print(self.current_pollen)
 
     def reset(self):
         self.images = []
@@ -307,6 +353,53 @@ class MainSenior(QMainWindow, Ui_MainWindow):
         self.confidenceSlider.setEnabled(enable)
         self.commentEdit.setEnabled(enable)
         self.pollenListWidget.setEnabled(enable)
+
+    #########################################
+    #               Review Page             #
+    #########################################
+
+    def tab_selected(self, tab_index):
+        if tab_index == 0:
+            self.mode = "folder"
+        elif tab_index == 1:
+            self.add_names_to_combo()
+
+    def add_names_to_combo(self):
+        if self.names_loaded == True:
+            return
+        connection = sqlite3.connect("annotation.db")
+        cursor = connection.cursor()
+        cursor.execute("SELECT DISTINCT user FROM annotation")
+        users = cursor.fetchall()
+        for user in users:
+            self.user_list_comboBox.addItem(user[0])
+        connection.commit()
+        connection.close()
+        self.names_loaded = True
+
+    def load_data_from_db(self):
+        self.mode = "DB"
+        self.fetch_annotation()
+        self.load_data_to_ui()
+        self.load_images(mode="DB")
+
+    def fetch_annotation(self):
+        connection = sqlite3.connect("annotation.db")
+        cursor = connection.cursor()
+        cursor.execute(f"SELECT * FROM annotation WHERE user = '{self.user_list_comboBox.currentText()}'")
+        self.loaded_data = cursor.fetchall()
+        print(self.loaded_data)
+
+    def load_data_to_ui(self):
+        self.lcdNumber.display(len(self.loaded_data))
+        self.path_label.setText(os.path.basename(self.loaded_data[self.index][0]))
+        self.class_label.setText(self.loaded_data[self.index][1])
+        self.confidence_label.setText(str(self.loaded_data[self.index][2]))
+        self.comment_label.setText(self.loaded_data[self.index][3])
+        self.user_label.setText(self.loaded_data[self.index][4])
+        self.is_senior_label.setText("Senior" if self.loaded_data[self.index][5] == 1 else "Medior")
+        self.timestamp_label.setText(str(self.loaded_data[self.index][6]))
+
 
 
 if __name__ == '__main__':

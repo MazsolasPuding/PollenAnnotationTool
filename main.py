@@ -139,7 +139,7 @@ app = QApplication(sys.argv)
 # widget.addWidget(welcome)
 
 # widget.show()
-window = MainSenior(app, "horvada", 1)
+window = MainSenior(app, "trial", 0)
 window.show()
 app.exec()
 
