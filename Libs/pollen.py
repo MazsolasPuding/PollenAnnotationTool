@@ -14,12 +14,16 @@ class Pollen():
         self.metadata = {}
         self.labelled = False
         #-----------Review Properties-----------#
+        self.annotation_id = 0
         self.previous_class = ""
         self.previous_confidence = 0
         self.previous_comment = ""
         self.previous_user = ""
         self.previous_is_senior = False
         self.previous_timestamp = ""
+        self.reviewer = ""
+        self.review_score = 0
+        self.review_comment = ""
 
     def get_image_metadata(self):
         self.image = Image.open(self.path)

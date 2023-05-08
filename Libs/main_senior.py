@@ -99,7 +99,6 @@ class MainSenior(QMainWindow, Ui_MainWindow):
 
     def load_images(self, *,mode='folder'):
         self.reset()
-        print(mode)
         if mode == 'folder':
             self.open_dir_dialog()
         self.create_pollen_objects(mode)
@@ -119,7 +118,7 @@ class MainSenior(QMainWindow, Ui_MainWindow):
         elif mode == "DB":
             paths = []
             for row in self.loaded_data:
-                paths.append(row[0])
+                paths.append(row[1])
         for n, fn in enumerate(paths):
             p = Pollen()
             p.path = fn
@@ -131,12 +130,13 @@ class MainSenior(QMainWindow, Ui_MainWindow):
             except:
                 print(f"No metadata at {fn}")
             if mode == "DB":
-                p.previous_class = self.loaded_data[self.index][1]
-                p.previous_confidence = self.loaded_data[self.index][2]
-                p.previous_comment = self.loaded_data[self.index][3]
-                p.previous_user = self.loaded_data[self.index][4]
-                p.previous_is_senior = self.loaded_data[self.index][5]
-                p.previous_timestamp = self.loaded_data[self.index][6]
+                p.annotation_id = self.loaded_data[n][0]
+                p.previous_class = self.loaded_data[n][2]
+                p.previous_confidence = self.loaded_data[n][3]
+                p.previous_comment = self.loaded_data[n][4]
+                p.previous_user = self.loaded_data[n][5]
+                p.previous_is_senior = self.loaded_data[n][6]
+                p.previous_timestamp = self.loaded_data[n][7]
             self.images.append(p)
         try:
             self.current_pollen = self.images[self.index]
@@ -204,7 +204,7 @@ class MainSenior(QMainWindow, Ui_MainWindow):
         elif mode == "DB":
             paths = []
             for row in self.loaded_data:
-                paths.append(row[0])
+                paths.append(row[1])
         for n, fn in enumerate(paths):
             image = QImage(fn)
             item = preview(n, fn, image)
@@ -299,6 +299,9 @@ class MainSenior(QMainWindow, Ui_MainWindow):
             QMessageBox.critical(self, "Database Error", "Could not write to database, plase try again or restart the application.")
             return
         if self.mode == "DB":
+            self.current_pollen.reviewer = self.user
+            self.current_pollen.review_score = self.score_spinBox.value()
+            self.current_pollen.review_comment = self.review_comment_lineEdit.text()
             try:
                 self.save_review_to_db()
             except sqlite3.OperationalError or sqlite3.IntegrityError:
@@ -311,7 +314,7 @@ class MainSenior(QMainWindow, Ui_MainWindow):
             self.finished_folder()
 
     def save_to_db(self):
-        connection = sqlite3.connect("annotation.db")
+        connection = sqlite3.connect("pollen.db")
         cursor = connection.cursor()
         pollen_info = [self.current_pollen.path,
                        self.current_pollen.class_,
@@ -321,7 +324,7 @@ class MainSenior(QMainWindow, Ui_MainWindow):
                        self.current_pollen.is_senior,
                        datetime.datetime.now().strftime("%Y-%m-%d %H:%M")]
         try:
-            query = 'INSERT INTO annotation (path, class, confidence, comment, user, is_senior, timestamp) VALUES (?,?,?,?,?,?,?)'
+            query = 'INSERT INTO annotation (path, class, confidence, comment, user, senior, timestamp) VALUES (?,?,?,?,?,?,?)'
             cursor.execute(query, pollen_info)
             connection.commit()
             connection.close()
@@ -330,7 +333,25 @@ class MainSenior(QMainWindow, Ui_MainWindow):
             return False
         
     def save_review_to_db(self):
-        print(self.current_pollen)
+        connection = sqlite3.connect("pollen.db")
+        cursor = connection.cursor()
+        review_info = [self.current_pollen.annotation_id,
+                       self.current_pollen.review_score,
+                       self.current_pollen.reviewer,
+                       self.current_pollen.review_comment,
+                       self.current_pollen.class_,
+                       self.current_pollen.confidence,
+                       self.current_pollen.comment,
+                       datetime.datetime.now().strftime("%Y-%m-%d %H:%M")]
+
+        try:
+            query = 'INSERT INTO review (annotation_id, review_score, reviewer, review_comment, new_class, new_confidence, new_comment, timestamp) VALUES (?,?,?,?,?,?,?,?)'
+            cursor.execute(query, review_info)
+            connection.commit()
+            connection.close()
+            return True
+        except sqlite3.OperationalError or sqlite3.IntegrityError:
+            return False
 
     def reset(self):
         self.images = []
@@ -362,12 +383,13 @@ class MainSenior(QMainWindow, Ui_MainWindow):
         if tab_index == 0:
             self.mode = "folder"
         elif tab_index == 1:
+            self.mode = "DB"
             self.add_names_to_combo()
 
     def add_names_to_combo(self):
         if self.names_loaded == True:
             return
-        connection = sqlite3.connect("annotation.db")
+        connection = sqlite3.connect("pollen.db")
         cursor = connection.cursor()
         cursor.execute("SELECT DISTINCT user FROM annotation")
         users = cursor.fetchall()
@@ -378,28 +400,26 @@ class MainSenior(QMainWindow, Ui_MainWindow):
         self.names_loaded = True
 
     def load_data_from_db(self):
-        self.mode = "DB"
         self.fetch_annotation()
         self.load_data_to_ui()
         self.load_images(mode="DB")
 
     def fetch_annotation(self):
-        connection = sqlite3.connect("annotation.db")
+        connection = sqlite3.connect("pollen.db")
         cursor = connection.cursor()
         cursor.execute(f"SELECT * FROM annotation WHERE user = '{self.user_list_comboBox.currentText()}'")
         self.loaded_data = cursor.fetchall()
-        print(self.loaded_data)
 
     def load_data_to_ui(self):
         self.lcdNumber.display(len(self.loaded_data))
-        self.path_label.setText(os.path.basename(self.loaded_data[self.index][0]))
-        self.class_label.setText(self.loaded_data[self.index][1])
-        self.confidence_label.setText(str(self.loaded_data[self.index][2]))
-        self.comment_label.setText(self.loaded_data[self.index][3])
-        self.user_label.setText(self.loaded_data[self.index][4])
-        self.is_senior_label.setText("Senior" if self.loaded_data[self.index][5] == 1 else "Medior")
-        self.timestamp_label.setText(str(self.loaded_data[self.index][6]))
-
+        self.annotation_id_label.setText(str(self.loaded_data[self.index][0]))
+        self.path_label.setText(os.path.basename(self.loaded_data[self.index][1]))
+        self.class_label.setText(self.loaded_data[self.index][2])
+        self.confidence_label.setText(str(self.loaded_data[self.index][3]))
+        self.comment_label.setText(self.loaded_data[self.index][4])
+        self.user_label.setText(self.loaded_data[self.index][5])
+        self.is_senior_label.setText("Senior" if self.loaded_data[self.index][6] == 1 else "Medior")
+        self.timestamp_label.setText(str(self.loaded_data[self.index][7]))
 
 
 if __name__ == '__main__':

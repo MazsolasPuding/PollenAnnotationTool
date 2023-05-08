@@ -63,11 +63,11 @@ class CreateAccount(QDialog, Ui_Create_account):
         self.errorLabel.setText("")
 
         try:
-            connection = sqlite3.connect("users.db")
+            connection = sqlite3.connect("pollen.db")
             cursor = connection.cursor()
             encoded = base64.b64encode(password.encode("utf-8"))
             user_info = [username, encoded, senior]
-            query = 'INSERT INTO login_info (username, password, senior) VALUES (?,?,?)'
+            query = 'INSERT INTO users (username, password, senior) VALUES (?,?,?)'
             cursor.execute(query, user_info)
         except sqlite3.IntegrityError:
             self.errorLabel.setText("Username already in use.")
@@ -105,9 +105,9 @@ class Login(QDialog, Ui_Login):
             return
         self.errorLabel.setText("")
 
-        connection = sqlite3.connect("users.db")
+        connection = sqlite3.connect("pollen.db")
         cursor = connection.cursor()
-        query = f'SELECT password, senior FROM login_info WHERE username =\'{username}\''
+        query = f'SELECT password, senior FROM users WHERE username =\'{username}\''
         cursor.execute(query)
         try:
             fetched = cursor.fetchall()
@@ -139,7 +139,7 @@ app = QApplication(sys.argv)
 # widget.addWidget(welcome)
 
 # widget.show()
-window = MainSenior(app, "trial", 0)
+window = MainSenior(app, "horvada", 1)
 window.show()
 app.exec()
 

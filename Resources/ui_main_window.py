@@ -298,6 +298,23 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_6.addWidget(self.line_3)
 
+        self.horizontalLayout_18 = QHBoxLayout()
+        self.horizontalLayout_18.setObjectName(u"horizontalLayout_18")
+        self.label_10 = QLabel(self.data_frame)
+        self.label_10.setObjectName(u"label_10")
+
+        self.horizontalLayout_18.addWidget(self.label_10)
+
+        self.annotation_id_label = QLabel(self.data_frame)
+        self.annotation_id_label.setObjectName(u"annotation_id_label")
+
+        self.horizontalLayout_18.addWidget(self.annotation_id_label)
+
+        self.horizontalLayout_18.setStretch(0, 1)
+        self.horizontalLayout_18.setStretch(1, 2)
+
+        self.verticalLayout_6.addLayout(self.horizontalLayout_18)
+
         self.horizontalLayout_4 = QHBoxLayout()
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.label_2 = QLabel(self.data_frame)
@@ -310,6 +327,8 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_4.addWidget(self.path_label)
 
+        self.horizontalLayout_4.setStretch(0, 1)
+        self.horizontalLayout_4.setStretch(1, 2)
 
         self.verticalLayout_6.addLayout(self.horizontalLayout_4)
 
@@ -325,6 +344,8 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_5.addWidget(self.class_label)
 
+        self.horizontalLayout_5.setStretch(0, 1)
+        self.horizontalLayout_5.setStretch(1, 2)
 
         self.verticalLayout_6.addLayout(self.horizontalLayout_5)
 
@@ -340,6 +361,8 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_6.addWidget(self.confidence_label)
 
+        self.horizontalLayout_6.setStretch(0, 1)
+        self.horizontalLayout_6.setStretch(1, 2)
 
         self.verticalLayout_6.addLayout(self.horizontalLayout_6)
 
@@ -355,6 +378,8 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_7.addWidget(self.comment_label)
 
+        self.horizontalLayout_7.setStretch(0, 1)
+        self.horizontalLayout_7.setStretch(1, 2)
 
         self.verticalLayout_6.addLayout(self.horizontalLayout_7)
 
@@ -370,6 +395,8 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_8.addWidget(self.user_label)
 
+        self.horizontalLayout_8.setStretch(0, 1)
+        self.horizontalLayout_8.setStretch(1, 2)
 
         self.verticalLayout_6.addLayout(self.horizontalLayout_8)
 
@@ -385,6 +412,8 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_9.addWidget(self.is_senior_label)
 
+        self.horizontalLayout_9.setStretch(0, 1)
+        self.horizontalLayout_9.setStretch(1, 2)
 
         self.verticalLayout_6.addLayout(self.horizontalLayout_9)
 
@@ -400,6 +429,8 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_10.addWidget(self.timestamp_label)
 
+        self.horizontalLayout_10.setStretch(0, 1)
+        self.horizontalLayout_10.setStretch(1, 2)
 
         self.verticalLayout_6.addLayout(self.horizontalLayout_10)
 
@@ -704,7 +735,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -737,6 +768,8 @@ class Ui_MainWindow(object):
         self.load_annotations_Button.setText(QCoreApplication.translate("MainWindow", u"Load", None))
         self.label_31.setText(QCoreApplication.translate("MainWindow", u"Selected Items for Review:", None))
         self.label_27.setText(QCoreApplication.translate("MainWindow", u"Data", None))
+        self.label_10.setText(QCoreApplication.translate("MainWindow", u"Annotation ID:", None))
+        self.annotation_id_label.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Path:", None))
         self.path_label.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
         self.label_12.setText(QCoreApplication.translate("MainWindow", u"Class:", None))

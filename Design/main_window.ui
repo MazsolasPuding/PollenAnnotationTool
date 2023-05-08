@@ -362,7 +362,25 @@ border: 1px solid black;
               </widget>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <layout class="QHBoxLayout" name="horizontalLayout_18" stretch="1,2">
+               <item>
+                <widget class="QLabel" name="label_10">
+                 <property name="text">
+                  <string>Annotation ID:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="annotation_id_label">
+                 <property name="text">
+                  <string>TextLabel</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,2">
                <item>
                 <widget class="QLabel" name="label_2">
                  <property name="text">
@@ -380,7 +398,7 @@ border: 1px solid black;
               </layout>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_5">
+              <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,2">
                <item>
                 <widget class="QLabel" name="label_12">
                  <property name="text">
@@ -398,7 +416,7 @@ border: 1px solid black;
               </layout>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_6">
+              <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,2">
                <item>
                 <widget class="QLabel" name="label_14">
                  <property name="text">
@@ -416,7 +434,7 @@ border: 1px solid black;
               </layout>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_7">
+              <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="1,2">
                <item>
                 <widget class="QLabel" name="label_16">
                  <property name="text">
@@ -434,7 +452,7 @@ border: 1px solid black;
               </layout>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_8">
+              <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="1,2">
                <item>
                 <widget class="QLabel" name="label_18">
                  <property name="text">
@@ -452,7 +470,7 @@ border: 1px solid black;
               </layout>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_9">
+              <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="1,2">
                <item>
                 <widget class="QLabel" name="label_20">
                  <property name="text">
@@ -470,7 +488,7 @@ border: 1px solid black;
               </layout>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_10">
+              <layout class="QHBoxLayout" name="horizontalLayout_10" stretch="1,2">
                <item>
                 <widget class="QLabel" name="label_22">
                  <property name="text">
