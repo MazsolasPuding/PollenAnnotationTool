@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QApplication, QDialog, QWidget, QMainWindow, QFileDialog, QMessageBox, QTableWidgetItem, QTreeWidgetItem, QTabWidget
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QTableWidgetItem, QTreeWidgetItem
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QImage, QPixmap
 
@@ -425,8 +425,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         date_from = self.from_dateTimeEdit.dateTime().toPython().strftime("%Y-%m-%d %H:%M")
         date_until = self.until_dateTimeEdit.dateTime().toPython().strftime("%Y-%m-%d %H:%M")
         user = self.user_list_comboBox.currentText()
-        params = (user, date_from, date_until)
-        query = f"SELECT * FROM annotation WHERE user = ? AND timestamp BETWEEN ? AND ?;"""
+
+        if user == "All Users" and self.include_senior_checkBox.isChecked():
+            query = f"SELECT * FROM annotation WHERE timestamp BETWEEN ? AND ?;"
+            params = (date_from, date_until)
+        elif user == "All Users":
+            query = f"SELECT * FROM annotation WHERE senior = 0 AND timestamp BETWEEN ? AND ?;"
+            params = (date_from, date_until)
+        else:
+            params = (user, date_from, date_until)
+            query = f"SELECT * FROM annotation WHERE user = ? AND timestamp BETWEEN ? AND ?;"
         cursor.execute(query, params)
         self.loaded_data = cursor.fetchall()
 
