@@ -89,6 +89,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.tabWidget.setTabEnabled(1, False)
         self.tabWidget.tabBarClicked.connect(self.tab_selected)
         self.load_annotations_Button.clicked.connect(self.load_data_from_db)
+        self.all_times_checkBox.clicked.connect(self.all_times)
         
 
     def quit(self):
@@ -180,8 +181,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
     def show_image(self):
-        #if not os.path.exists(self.current_pollen.path):
-        #    QMessageBox.warning(self, "No Image Found", "The current records path does not exist.")
+        if not os.path.exists(self.current_pollen.path):
+           QMessageBox.warning(self, "No Image Found", "The current records path does not exist.")
         current_image = self.images[self.index].pixmap
         size = self.pictureLabel.size()
         scaled_image = current_image.scaled(size, aspectMode=Qt.KeepAspectRatio)
@@ -425,16 +426,47 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         date_from = self.from_dateTimeEdit.dateTime().toPython().strftime("%Y-%m-%d %H:%M")
         date_until = self.until_dateTimeEdit.dateTime().toPython().strftime("%Y-%m-%d %H:%M")
         user = self.user_list_comboBox.currentText()
+        all_times = self.all_times_checkBox.isChecked()
+        include_senior = self.include_senior_checkBox.isChecked()
 
-        if user == "All Users" and self.include_senior_checkBox.isChecked():
-            query = f"SELECT * FROM annotation WHERE timestamp BETWEEN ? AND ?;"
-            params = (date_from, date_until)
-        elif user == "All Users":
-            query = f"SELECT * FROM annotation WHERE senior = 0 AND timestamp BETWEEN ? AND ?;"
-            params = (date_from, date_until)
-        else:
-            params = (user, date_from, date_until)
-            query = f"SELECT * FROM annotation WHERE user = ? AND timestamp BETWEEN ? AND ?;"
+        # if user == "All Users" and include_senior and all_times:
+        #     query = f"SELECT * FROM annotation"
+        #     params = ()
+        # elif user == "All Users" and not include_senior and all_times:
+        #     query = f"SELECT * FROM annotation WHERE senior = 0"
+        #     params = ()
+        # elif user != "All Users" and include_senior and all_times:
+        #     query = f"SELECT * FROM annotation WHERE user = ?"
+        #     params = (user)
+        # elif user != "All Users" and not include_senior and all_times:
+        #     query = f"SELECT * FROM annotation WHERE user = ? AND senior = 0;"
+        #     params = (user)
+        # elif user != "All Users" and not include_senior and not all_times:
+        #     query = f"SELECT * FROM annotation WHERE user = ? AND senior = 0 AND timestamp BETWEEN ? AND ?"
+        #     params = (user, date_from, date_until)
+        # elif user == "All Users" and not include_senior and not all_times:
+        #     query = f"SELECT * FROM annotation WHERE senior = 0 AND timestamp BETWEEN ? AND ?"
+        #     params = (date_from, date_until)
+        # elif user == "All Users" and include_senior and not all_times:
+        #     query = f"SELECT * FROM annotation WHERE timestamp BETWEEN ? AND ?"
+        #     params = (date_from, date_until)
+
+        # query_params_map = {
+        #     ("All Users", True, True): ("SELECT * FROM annotation", ()),
+        #     ("All Users", False, True): ("SELECT * FROM annotation WHERE senior = 0", ()),
+        #     ("All Users", True, False): ("SELECT * FROM annotation WHERE timestamp BETWEEN ? AND ?", (date_from, date_until)),
+        #     ("All Users", False, False): ("SELECT * FROM annotation WHERE senior = 0 AND timestamp BETWEEN ? AND ?", (date_from, date_until)),
+        #     ((user := "All Users"), include_senior, True): (f"SELECT * FROM annotation WHERE user = ?", (user,)),
+        #     ((user := "All Users"), include_senior, False): (f"SELECT * FROM annotation WHERE timestamp BETWEEN ? AND ?", (date_from, date_until)),
+        #     (user != "All Users", include_senior, True): (f"SELECT * FROM annotation WHERE user = ?", (user,)),
+        #     (user != "All Users", include_senior, False): (f"SELECT * FROM annotation WHERE user = ? AND timestamp BETWEEN ? AND ?", (user, date_from, date_until)),
+        # }
+
+        # query, params = query_params_map[(user, include_senior, all_times)]
+
+
+        print(query)
+        print(params)
         cursor.execute(query, params)
         self.loaded_data = cursor.fetchall()
 
@@ -454,6 +486,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.user_label.setText(self.loaded_data[self.index][5])
         self.is_senior_label.setText("Senior" if self.loaded_data[self.index][6] == 1 else "Medior")
         self.timestamp_label.setText(str(self.loaded_data[self.index][7]))
+
+    def all_times(self):
+        checked = self.all_times_checkBox.isChecked()
+        self.from_dateTimeEdit.setEnabled(not checked)
+        self.until_dateTimeEdit.setEnabled(not checked)
 
 
 if __name__ == '__main__':
