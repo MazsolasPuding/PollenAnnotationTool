@@ -84,6 +84,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.saveButton.setEnabled(False)
 
         # Review Page
+        self.tabWidget.setCurrentIndex(0)
+        if self.is_senior != 1:
+            self.tabWidget.setTabEnabled(1, False)
         self.tabWidget.tabBarClicked.connect(self.tab_selected)
         self.load_annotations_Button.clicked.connect(self.load_data_from_db)
         
@@ -177,8 +180,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
     def show_image(self):
-        if not os.path.exists(self.current_pollen.path):
-            QMessageBox.warning(self, "No Image Found", "The current records path does not exist.")
+        #if not os.path.exists(self.current_pollen.path):
+        #    QMessageBox.warning(self, "No Image Found", "The current records path does not exist.")
         current_image = self.images[self.index].pixmap
         size = self.pictureLabel.size()
         scaled_image = current_image.scaled(size, aspectMode=Qt.KeepAspectRatio)
@@ -237,6 +240,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.current_pollen = self.images[self.index]
         self._keep_in_range()
         self._set_style_sheet(self.current_pollen.labelled)
+        self.reset_inputs()
         self.show_image()
         if self.mode == "DB":
             self.load_data_to_ui()
@@ -246,6 +250,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.current_pollen = self.images[self.index]
         self._keep_in_range()
         self._set_style_sheet(self.current_pollen.labelled)
+        self.reset_inputs()
         self.show_image()
         if self.mode == "DB":
             self.load_data_to_ui()
@@ -376,6 +381,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.confidenceSlider.setEnabled(enable)
         self.commentEdit.setEnabled(enable)
         self.pollenListWidget.setEnabled(enable)
+
+    def reset_inputs(self):
+        self.commentEdit.clear()
+        self.review_comment_lineEdit.clear()
+        self.confidenceSlider.setValue(5)
+        self.score_spinBox.setValue(50)
 
     #########################################
     #               Review Page             #
