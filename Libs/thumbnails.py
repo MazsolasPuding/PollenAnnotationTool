@@ -87,7 +87,7 @@ class MainWindow(QMainWindow):
         self.path = open_directory
 
         # Add a bunch of images.
-        for n, fn in enumerate(glob.glob(f"{self.path}*.jpg")):
+        for n, fn in enumerate(glob.glob(f"{self.path}*.jp*g")):
             image = QImage(fn)
             item = preview(n, fn, image)
             self.model.previews.append(item)

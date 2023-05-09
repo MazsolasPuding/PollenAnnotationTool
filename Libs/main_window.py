@@ -18,7 +18,7 @@ from Libs.pollen import Pollen
 __appname__ = "Pollen"
 preview = namedtuple("preview", ['id', 'path', 'image'])
 
-class MainSenior(QMainWindow, Ui_MainWindow):
+class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, app, user, is_senior):
         super().__init__()
         self.setupUi(self)
@@ -177,6 +177,8 @@ class MainSenior(QMainWindow, Ui_MainWindow):
 
 
     def show_image(self):
+        if not os.path.exists(self.current_pollen.path):
+            QMessageBox.warning(self, "No Image Found", "The current records path does not exist.")
         current_image = self.images[self.index].pixmap
         size = self.pictureLabel.size()
         scaled_image = current_image.scaled(size, aspectMode=Qt.KeepAspectRatio)
@@ -401,14 +403,27 @@ class MainSenior(QMainWindow, Ui_MainWindow):
 
     def load_data_from_db(self):
         self.fetch_annotation()
+        if not self.check_loaded():
+            return
         self.load_data_to_ui()
         self.load_images(mode="DB")
 
     def fetch_annotation(self):
         connection = sqlite3.connect("pollen.db")
         cursor = connection.cursor()
-        cursor.execute(f"SELECT * FROM annotation WHERE user = '{self.user_list_comboBox.currentText()}'")
+        date_from = self.from_dateTimeEdit.dateTime().toPython().strftime("%Y-%m-%d %H:%M")
+        date_until = self.until_dateTimeEdit.dateTime().toPython().strftime("%Y-%m-%d %H:%M")
+        user = self.user_list_comboBox.currentText()
+        params = (user, date_from, date_until)
+        query = f"SELECT * FROM annotation WHERE user = ? AND timestamp BETWEEN ? AND ?;"""
+        cursor.execute(query, params)
         self.loaded_data = cursor.fetchall()
+
+    def check_loaded(self):
+        if not self.loaded_data:
+            QMessageBox.warning(self, "No record Found", "No record Found in the Database with the current filter.")
+            return False
+        return True
 
     def load_data_to_ui(self):
         self.lcdNumber.display(len(self.loaded_data))
@@ -424,6 +439,6 @@ class MainSenior(QMainWindow, Ui_MainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = MainSenior(app)
+    window = MainWindow(app)
     window.show()
     app.exec()

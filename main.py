@@ -3,7 +3,7 @@ import sys
 import base64
 import sqlite3
 from Resources.ui_welcome import Ui_Welcome
-from Libs.main_senior import MainSenior
+from Libs.main_window import MainWindow
 from Resources.ui_login import Ui_Login
 from Resources.ui_create_account import Ui_Create_account
 
@@ -122,7 +122,7 @@ class Login(QDialog, Ui_Login):
             self.errorLabel.setText("Username not found, please create an account.")
             return
         self.widget.hide()
-        self.main = MainSenior(app, username, fetched_is_senior )
+        self.main = MainWindow(app, username, fetched_is_senior )
         self.main.show()
 
     def go_back(self):
@@ -139,7 +139,7 @@ app = QApplication(sys.argv)
 # widget.addWidget(welcome)
 
 # widget.show()
-window = MainSenior(app, "horvada", 1)
+window = MainWindow(app, "horvada", 1)
 window.show()
 app.exec()
 
