@@ -6,9 +6,9 @@ import base64
 import sqlite3
 
 from Resources.ui_welcome import Ui_Welcome
-from Libs.main_window import MainWindow
 from Resources.ui_login import Ui_Login
 from Resources.ui_create_account import Ui_Create_account
+from Libs.main_window import MainWindow
 
 """
 Mac init.
