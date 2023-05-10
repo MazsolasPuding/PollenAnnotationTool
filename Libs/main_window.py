@@ -451,18 +451,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         #     query = f"SELECT * FROM annotation WHERE timestamp BETWEEN ? AND ?"
         #     params = (date_from, date_until)
 
-        # query_params_map = {
-        #     ("All Users", True, True): ("SELECT * FROM annotation", ()),
-        #     ("All Users", False, True): ("SELECT * FROM annotation WHERE senior = 0", ()),
-        #     ("All Users", True, False): ("SELECT * FROM annotation WHERE timestamp BETWEEN ? AND ?", (date_from, date_until)),
-        #     ("All Users", False, False): ("SELECT * FROM annotation WHERE senior = 0 AND timestamp BETWEEN ? AND ?", (date_from, date_until)),
-        #     ((user := "All Users"), include_senior, True): (f"SELECT * FROM annotation WHERE user = ?", (user,)),
-        #     ((user := "All Users"), include_senior, False): (f"SELECT * FROM annotation WHERE timestamp BETWEEN ? AND ?", (date_from, date_until)),
-        #     (user != "All Users", include_senior, True): (f"SELECT * FROM annotation WHERE user = ?", (user,)),
-        #     (user != "All Users", include_senior, False): (f"SELECT * FROM annotation WHERE user = ? AND timestamp BETWEEN ? AND ?", (user, date_from, date_until)),
-        # }
+        query_params_map = {
+            ("All Users", True, True): ("SELECT * FROM annotation", ()),
+            ("All Users", False, True): ("SELECT * FROM annotation WHERE senior = 0", ()),
+            ("All Users", True, False): ("SELECT * FROM annotation WHERE timestamp BETWEEN ? AND ?", (date_from, date_until)),
+            ("All Users", False, False): ("SELECT * FROM annotation WHERE senior = 0 AND timestamp BETWEEN ? AND ?", (date_from, date_until)),
+            ((user := "All Users"), include_senior, True): (f"SELECT * FROM annotation WHERE user = ?", (user,)),
+            ((user := "All Users"), include_senior, False): (f"SELECT * FROM annotation WHERE timestamp BETWEEN ? AND ?", (date_from, date_until)),
+            (user != "All Users", include_senior, True): (f"SELECT * FROM annotation WHERE user = ?", (user,)),
+            (user != "All Users", include_senior, False): (f"SELECT * FROM annotation WHERE user = ? AND timestamp BETWEEN ? AND ?", (user, date_from, date_until)),
+        }
 
-        # query, params = query_params_map[(user, include_senior, all_times)]
+        query, params = query_params_map[(user, include_senior, all_times)]
 
 
         print(query)

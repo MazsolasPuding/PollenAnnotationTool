@@ -88,6 +88,11 @@ class Ui_MainWindow(object):
         icon10 = QIcon()
         icon10.addFile(u":/Icons/fit-window.png", QSize(), QIcon.Normal, QIcon.Off)
         self.actionFit_Window.setIcon(icon10)
+        self.actionSign_Out = QAction(MainWindow)
+        self.actionSign_Out.setObjectName(u"actionSign_Out")
+        icon11 = QIcon()
+        icon11.addFile(u":/Icons/sign-out.png", QSize(), QIcon.Normal, QIcon.Off)
+        self.actionSign_Out.setIcon(icon11)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralwidget.setStyleSheet(u"QWidget#centralwidget{\n"
@@ -712,11 +717,13 @@ class Ui_MainWindow(object):
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionSave)
         self.menuFile.addSeparator()
+        self.menuFile.addAction(self.actionSign_Out)
         self.menuFile.addAction(self.actionQuit)
         self.menuView.addAction(self.actionPrevious)
         self.menuView.addAction(self.actionNext)
         self.menuHelp.addAction(self.actionAbout)
         self.menuHelp.addAction(self.actionAboutQt)
+        self.toolBar.addAction(self.actionSign_Out)
         self.toolBar.addAction(self.actionOpen_Dir)
         self.toolBar.addSeparator()
         self.toolBar.addAction(self.actionSave)
@@ -727,7 +734,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -745,6 +752,7 @@ class Ui_MainWindow(object):
         self.actionZoom_In.setText(QCoreApplication.translate("MainWindow", u"Zoom In", None))
         self.actionZoom_Out.setText(QCoreApplication.translate("MainWindow", u"Zoom Out", None))
         self.actionFit_Window.setText(QCoreApplication.translate("MainWindow", u"Fit Window", None))
+        self.actionSign_Out.setText(QCoreApplication.translate("MainWindow", u"Sign Out", None))
         self.pictureLabel.setText(QCoreApplication.translate("MainWindow", u"Open a Directory to show images.", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.annotation_tab), QCoreApplication.translate("MainWindow", u"Annotation Tab", None))
         self.pictureLabel_2.setText(QCoreApplication.translate("MainWindow", u"Load from Database to show images.", None))

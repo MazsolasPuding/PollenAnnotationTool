@@ -36,7 +36,7 @@ border: 1px solid black;
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="annotation_tab">
        <attribute name="title">
@@ -599,6 +599,7 @@ border: 1px solid black;
     <addaction name="separator"/>
     <addaction name="actionSave"/>
     <addaction name="separator"/>
+    <addaction name="actionSign_Out"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuView">
@@ -997,6 +998,7 @@ border: 1px solid black;
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionSign_Out"/>
    <addaction name="actionOpen_Dir"/>
    <addaction name="separator"/>
    <addaction name="actionSave"/>
@@ -1093,6 +1095,15 @@ border: 1px solid black;
    </property>
    <property name="text">
     <string>Fit Window</string>
+   </property>
+  </action>
+  <action name="actionSign_Out">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/Icons/sign-out.png</normaloff>:/Icons/sign-out.png</iconset>
+   </property>
+   <property name="text">
+    <string>Sign Out</string>
    </property>
   </action>
  </widget>

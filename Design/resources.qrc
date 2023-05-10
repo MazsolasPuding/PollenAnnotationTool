@@ -1,5 +1,6 @@
 <RCC>
   <qresource>
+    <file>Icons/sign-out.png</file>
     <file>Icons/app.icns</file>
     <file>Icons/aboutIcon.png</file>
     <file>Icons/aboutQtIcon.png</file>
