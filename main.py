@@ -1,7 +1,10 @@
 from PySide6.QtWidgets import QApplication, QDialog, QWidget, QStackedWidget, QLineEdit
+from PySide6.QtCore import QObject, Signal
+
 import sys
 import base64
 import sqlite3
+
 from Resources.ui_welcome import Ui_Welcome
 from Libs.main_window import MainWindow
 from Resources.ui_login import Ui_Login
@@ -121,7 +124,7 @@ class Login(QDialog, Ui_Login):
         except TypeError:
             self.errorLabel.setText("Username not found, please create an account.")
             return
-        self.widget.hide()
+        self.widget.close()
         self.main = MainWindow(app, username, fetched_is_senior )
         self.main.show()
 
@@ -129,18 +132,25 @@ class Login(QDialog, Ui_Login):
         self.widget.removeWidget(self.widget.widget(self.widget.currentIndex()))
 
 
-app = QApplication(sys.argv)
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
 
-# widget = QStackedWidget()
-# widget.setFixedWidth(1200)
-# widget.setFixedHeight(800)
+    widget = QStackedWidget()
+    widget.setFixedWidth(1200)
+    widget.setFixedHeight(800)
 
-# welcome = Welcome(widget)
-# widget.addWidget(welcome)
+    welcome = Welcome(widget)
+    widget.addWidget(welcome)
 
-# widget.show()
-window = MainWindow(app, "horvada", 1)
-window.show()
-app.exec()
+
+    def restart():
+        widget.removeWidget(widget.widget(widget.currentIndex()))
+        widget.show()
+
+    # app.aboutToQuit.connect(restart)
+    # widget.show()
+    window = MainWindow(app, "horvada", 1)
+    window.show()
+    sys.exit(app.exec())
 
 

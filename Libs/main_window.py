@@ -63,6 +63,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionZoom_In.triggered.connect(self.zoom_in)
         self.actionZoom_Out.triggered.connect(self.zoom_out)
         self.actionFit_Window.triggered.connect(self.fit_window)
+        self.actionSign_Out.triggered.connect(self.sing_out)
 
         self.pollenListWidget.itemClicked.connect(self.class_selected)
         self.nextButton.clicked.connect(self.next)
@@ -90,10 +91,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tabWidget.tabBarClicked.connect(self.tab_selected)
         self.load_annotations_Button.clicked.connect(self.load_data_from_db)
         self.all_times_checkBox.clicked.connect(self.all_times)
+        self.user_list_comboBox.textActivated.connect(self.user_selected)
         
 
     def quit(self):
         self.app.quit()
+    
+    def closeEvent(self, event):
+        QApplication.instance().aboutToQuit.emit()
+
+    def sing_out(self):
+        button = QMessageBox.question(self, "Signing out?", "Do you want to Sign Out?")
+        if button == QMessageBox.Yes:
+            self.close()
+        return
 
     def about(self):
         QMessageBox.information(self, "About", "For Help check the included README File or contact the creator of the app.")
@@ -181,8 +192,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
     def show_image(self):
-        if not os.path.exists(self.current_pollen.path):
-           QMessageBox.warning(self, "No Image Found", "The current records path does not exist.")
+        # if not os.path.exists(self.current_pollen.path):
+        #    QMessageBox.warning(self, "No Image Found", "The current records path does not exist.")
         current_image = self.images[self.index].pixmap
         size = self.pictureLabel.size()
         scaled_image = current_image.scaled(size, aspectMode=Qt.KeepAspectRatio)
@@ -429,42 +440,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         all_times = self.all_times_checkBox.isChecked()
         include_senior = self.include_senior_checkBox.isChecked()
 
-        # if user == "All Users" and include_senior and all_times:
-        #     query = f"SELECT * FROM annotation"
-        #     params = ()
-        # elif user == "All Users" and not include_senior and all_times:
-        #     query = f"SELECT * FROM annotation WHERE senior = 0"
-        #     params = ()
-        # elif user != "All Users" and include_senior and all_times:
-        #     query = f"SELECT * FROM annotation WHERE user = ?"
-        #     params = (user)
-        # elif user != "All Users" and not include_senior and all_times:
-        #     query = f"SELECT * FROM annotation WHERE user = ? AND senior = 0;"
-        #     params = (user)
-        # elif user != "All Users" and not include_senior and not all_times:
-        #     query = f"SELECT * FROM annotation WHERE user = ? AND senior = 0 AND timestamp BETWEEN ? AND ?"
-        #     params = (user, date_from, date_until)
-        # elif user == "All Users" and not include_senior and not all_times:
-        #     query = f"SELECT * FROM annotation WHERE senior = 0 AND timestamp BETWEEN ? AND ?"
-        #     params = (date_from, date_until)
-        # elif user == "All Users" and include_senior and not all_times:
-        #     query = f"SELECT * FROM annotation WHERE timestamp BETWEEN ? AND ?"
-        #     params = (date_from, date_until)
-
         query_params_map = {
-            ("All Users", True, True): ("SELECT * FROM annotation", ()),
-            ("All Users", False, True): ("SELECT * FROM annotation WHERE senior = 0", ()),
-            ("All Users", True, False): ("SELECT * FROM annotation WHERE timestamp BETWEEN ? AND ?", (date_from, date_until)),
-            ("All Users", False, False): ("SELECT * FROM annotation WHERE senior = 0 AND timestamp BETWEEN ? AND ?", (date_from, date_until)),
-            ((user := "All Users"), include_senior, True): (f"SELECT * FROM annotation WHERE user = ?", (user,)),
-            ((user := "All Users"), include_senior, False): (f"SELECT * FROM annotation WHERE timestamp BETWEEN ? AND ?", (date_from, date_until)),
-            (user != "All Users", include_senior, True): (f"SELECT * FROM annotation WHERE user = ?", (user,)),
-            (user != "All Users", include_senior, False): (f"SELECT * FROM annotation WHERE user = ? AND timestamp BETWEEN ? AND ?", (user, date_from, date_until)),
+            (True, True, True): ("SELECT * FROM annotation", ()),
+            (True, False, True): ("SELECT * FROM annotation WHERE senior = 0", ()),
+            (True, True, False): ("SELECT * FROM annotation WHERE timestamp BETWEEN ? AND ?", (date_from, date_until)),
+            (True, False, False): ("SELECT * FROM annotation WHERE senior = 0 AND timestamp BETWEEN ? AND ?", (date_from, date_until)),
+            (False, True, True): (f"SELECT * FROM annotation WHERE user = ?", (user,)),
+            (False, True, False): (f"SELECT * FROM annotation WHERE user = ? AND timestamp BETWEEN ? AND ?", (user, date_from, date_until)),
+            # Not Callable. When a name is selected, the Senior option should ALWAYS be True
+            # (False, False, False): (f"SELECT * FROM annotation WHERE user = ? AND senior = 0 AND timestamp BETWEEN ? AND ?", (user, date_from, date_until)),
+            # (False, False, True): (f"SELECT * FROM annotation WHERE user = ? AND senior = 0", (user,)),
         }
 
-        query, params = query_params_map[(user, include_senior, all_times)]
-
-
+        query, params = query_params_map[(user == "All Users", include_senior, all_times)]
         print(query)
         print(params)
         cursor.execute(query, params)
@@ -491,6 +479,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         checked = self.all_times_checkBox.isChecked()
         self.from_dateTimeEdit.setEnabled(not checked)
         self.until_dateTimeEdit.setEnabled(not checked)
+
+    def user_selected(self, user):
+        if user == "All Users":
+            self.include_senior_checkBox.setEnabled(True)
+        else:
+            self.include_senior_checkBox.setChecked(True)
+            self.include_senior_checkBox.setEnabled(False)
 
 
 if __name__ == '__main__':
