@@ -147,10 +147,10 @@ if __name__ == "__main__":
         widget.removeWidget(widget.widget(widget.currentIndex()))
         widget.show()
 
-    # app.aboutToQuit.connect(restart)
-    # widget.show()
-    window = MainWindow(app, "horvada", 1)
-    window.show()
+    app.aboutToQuit.connect(restart)
+    widget.show()
+    # window = MainWindow(app, "horvada", 1)
+    # window.show()
     sys.exit(app.exec())
 
 

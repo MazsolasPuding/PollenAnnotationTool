@@ -13,6 +13,7 @@ import xml.etree.ElementTree as ET
 
 from Resources.ui_main_window import Ui_MainWindow
 from Libs.thumbnails import PreviewDelegate, PreviewModel
+from Libs.google_drvie import Drive
 from Libs.pollen import Pollen
 
 __appname__ = "Pollen"
@@ -36,6 +37,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.names_loaded = False
         self.loaded_data = {}
         self.mode = "folder"
+
+        # Load Database from Google Drive
+        self.drive = Drive()
+        self.drive.download_db()
 
         # Load Pollen classes
         self.load_predefined_classes(self.predef_classes_path)
@@ -192,8 +197,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
     def show_image(self):
-        # if not os.path.exists(self.current_pollen.path):
-        #    QMessageBox.warning(self, "No Image Found", "The current records path does not exist.")
+        if not os.path.exists(self.current_pollen.path):
+           QMessageBox.warning(self, "No Image Found", "The current records path does not exist.")
         current_image = self.images[self.index].pixmap
         size = self.pictureLabel.size()
         scaled_image = current_image.scaled(size, aspectMode=Qt.KeepAspectRatio)
@@ -329,11 +334,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.current_pollen.labelled = True
         self._set_style_sheet(True)
         print(self.current_pollen)
+        self.drive.update_db()
         if not self._is_remaining():
             self.finished_folder()
 
     def save_to_db(self):
-        connection = sqlite3.connect("pollen.db")
+        connection = sqlite3.connect("./Data/pollen.db")
         cursor = connection.cursor()
         pollen_info = [self.current_pollen.path,
                        self.current_pollen.class_,
@@ -352,7 +358,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return False
         
     def save_review_to_db(self):
-        connection = sqlite3.connect("pollen.db")
+        connection = sqlite3.connect("./Data/pollen.db")
         cursor = connection.cursor()
         review_info = [self.current_pollen.annotation_id,
                        self.current_pollen.review_score,
@@ -414,7 +420,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def add_names_to_combo(self):
         if self.names_loaded == True:
             return
-        connection = sqlite3.connect("pollen.db")
+        connection = sqlite3.connect("./Data/pollen.db")
         cursor = connection.cursor()
         cursor.execute("SELECT DISTINCT user FROM annotation")
         users = cursor.fetchall()
@@ -432,7 +438,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.load_images(mode="DB")
 
     def fetch_annotation(self):
-        connection = sqlite3.connect("pollen.db")
+        connection = sqlite3.connect("./Data/pollen.db")
         cursor = connection.cursor()
         date_from = self.from_dateTimeEdit.dateTime().toPython().strftime("%Y-%m-%d %H:%M")
         date_until = self.until_dateTimeEdit.dateTime().toPython().strftime("%Y-%m-%d %H:%M")
