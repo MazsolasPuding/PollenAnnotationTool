@@ -353,7 +353,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                        self.current_pollen.is_senior,
                        datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")]
         try:
-            query = 'INSERT INTO annotation (path, class, confidence, comment, user, senior, timestamp) VALUES (%s,%s,%s,%s,%s,%s,%s)'
+            query = """INSERT INTO annotation (path, class, confidence, comment, username, senior, timestamp) VALUES (%s,%s,%s,%s,%s,%s,%s);"""
             cursor.execute(query, pollen_info)
             connection.commit()
             connection.close()
@@ -426,7 +426,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return
         connection = Connection().connect
         cursor = connection.cursor()
-        cursor.execute("SELECT DISTINCT user FROM annotation")
+        cursor.execute("SELECT DISTINCT username FROM annotation")
         users = cursor.fetchall()
         for user in users:
             self.user_list_comboBox.addItem(user[0])
@@ -455,8 +455,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             (True, False, True): ("SELECT * FROM annotation WHERE senior = 0", ()),
             (True, True, False): ("SELECT * FROM annotation WHERE timestamp BETWEEN %s AND %s", (date_from, date_until)),
             (True, False, False): ("SELECT * FROM annotation WHERE senior = 0 AND timestamp BETWEEN %s AND %s", (date_from, date_until)),
-            (False, True, True): ("SELECT * FROM annotation WHERE user = %s", (user,)),
-            (False, True, False): ("SELECT * FROM annotation WHERE user = %s AND timestamp BETWEEN %s AND %s", (user, date_from, date_until)),
+            (False, True, True): ("SELECT * FROM annotation WHERE username = %s", (user,)),
+            (False, True, False): ("SELECT * FROM annotation WHERE username = %s AND timestamp BETWEEN %s AND %s", (user, date_from, date_until)),
             # Not Callable. When a name is selected, the Senior option should ALWAYS be True
             # (False, False, False): (f"SELECT * FROM annotation WHERE user = %s AND senior = 0 AND timestamp BETWEEN %s AND %s", (user, date_from, date_until)),
             # (False, False, True): (f"SELECT * FROM annotation WHERE user = %s AND senior = 0", (user,)),

@@ -13,11 +13,11 @@ CREATE TABLE "annotation" (
 	"class"	VARCHAR(255) NOT NULL,
 	"confidence"	INTEGER NOT NULL,
 	"comment"	TEXT,
-	"user"	VARCHAR(255) NOT NULL,
+	"username"	VARCHAR(255) NOT NULL,
 	"senior"	BOOLEAN NOT NULL,
 	"timestamp"	TIMESTAMP NOT NULL,
 	PRIMARY KEY("annotation_id"),
-	FOREIGN KEY("user") REFERENCES "users"("username")
+	FOREIGN KEY("username") REFERENCES "users"("username")
 );
 
 DROP TABLE IF EXISTS review CASCADE;
@@ -36,4 +36,8 @@ CREATE TABLE "review" (
 	FOREIGN KEY("reviewer") REFERENCES "users"("username")
 );
 
-
+DROP VIEW annotation_review;
+CREATE VIEW annotation_review AS
+SELECT a.annotation_id, a.path, a.class, a.confidence, a.comment, a.username, a.senior, a.timestamp AS annotation_timestamp, r.review_id, r.reviewer, r.review_score, r.review_comment, r.new_class, r.new_confidence, r.new_comment, r.timestamp AS review_timestamp
+FROM annotation a
+JOIN review r ON a.annotation_id = r.annotation_id;
