@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QTableWidgetItem, QTreeWidgetItem
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QImage, QPixmap
@@ -463,6 +465,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         print(params)
         cursor.execute(query, params)
         self.loaded_data = cursor.fetchall()
+        connection.commit()
+        connection.close()
 
     def check_loaded(self):
         if not self.loaded_data:
@@ -472,6 +476,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def load_data_to_ui(self):
         self.lcdNumber.display(len(self.loaded_data))
+        pprint(self.loaded_data)
         self.annotation_id_label.setText(str(self.loaded_data[self.index][0]))
         self.path_label.setText(os.path.basename(self.loaded_data[self.index][1]))
         self.class_label.setText(self.loaded_data[self.index][2])

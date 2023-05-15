@@ -9,6 +9,7 @@ from Resources.ui_welcome import Ui_Welcome
 from Resources.ui_login import Ui_Login
 from Resources.ui_create_account import Ui_Create_account
 from Libs.main_window import MainWindow
+from Libs.connect_to_db import Connection
 
 """
 Mac init.
@@ -58,23 +59,19 @@ class CreateAccount(QDialog, Ui_Create_account):
         if password != password_2:
             self.errorLabel.setText("Passwords does not match!")
             return
-        if experience == "Medior":
-            senior = 0
-        else:
-            senior = 1
-
+        senior = True if experience == "Senior" else False
         self.errorLabel.setText("")
 
-        try:
-            connection = sqlite3.connect("pollen.db")
-            cursor = connection.cursor()
-            encoded = base64.b64encode(password.encode("utf-8"))
-            user_info = [username, encoded, senior]
-            query = 'INSERT INTO users (username, password, senior) VALUES (?,?,?)'
-            cursor.execute(query, user_info)
-        except sqlite3.IntegrityError:
-            self.errorLabel.setText("Username already in use.")
-            return
+        # try:
+        connection = Connection().connect
+        cursor = connection.cursor()
+        encoded = base64.b64encode(password.encode("utf-8"))
+        user_info = [username, encoded, senior]
+        query = 'INSERT INTO users (username, password, senior) VALUES (?,?,?)'
+        cursor.execute(query, user_info)
+        # except:
+        #     self.errorLabel.setText("Username already in use.")
+        #     return
         connection.commit()
         connection.close()
         self.goto_login()

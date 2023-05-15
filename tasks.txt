@@ -1,0 +1,1 @@
+- 1 pixellel megnyúlik az ablak ha a nextre vagy a prev-re kattintok
