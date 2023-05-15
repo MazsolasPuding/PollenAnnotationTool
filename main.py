@@ -3,7 +3,6 @@ from PySide6.QtCore import QObject, Signal
 
 import sys
 import base64
-import sqlite3
 
 from Resources.ui_welcome import Ui_Welcome
 from Resources.ui_login import Ui_Login
@@ -66,8 +65,9 @@ class CreateAccount(QDialog, Ui_Create_account):
         connection = Connection().connect
         cursor = connection.cursor()
         encoded = base64.b64encode(password.encode("utf-8"))
-        user_info = [username, encoded, senior]
-        query = 'INSERT INTO users (username, password, senior) VALUES (?,?,?)'
+        user_info = [username, str(encoded), senior]
+        query = """INSERT INTO users (username, password, senior)
+                   VALUES (%s,%s,%s)"""
         cursor.execute(query, user_info)
         # except:
         #     self.errorLabel.setText("Username already in use.")
@@ -105,15 +105,18 @@ class Login(QDialog, Ui_Login):
             return
         self.errorLabel.setText("")
 
-        connection = sqlite3.connect("pollen.db")
+        connection = Connection().connect
         cursor = connection.cursor()
-        query = f'SELECT password, senior FROM users WHERE username =\'{username}\''
+        query = f"""
+                SELECT password, senior FROM users
+                WHERE username = '{username}'
+                """
         cursor.execute(query)
         try:
             fetched = cursor.fetchall()
             fetched_password = fetched[0][0]
             fetched_is_senior = fetched[0][1]
-            if fetched_password != base64.b64encode(password.encode("utf-8")):
+            if fetched_password != str(base64.b64encode(password.encode("utf-8"))):
                 self.errorLabel.setText("Invalid password")
                 return
             print("Successfully logged in.")
@@ -122,7 +125,7 @@ class Login(QDialog, Ui_Login):
             self.errorLabel.setText("Username not found, please create an account.")
             return
         self.widget.close()
-        self.main = MainWindow(app, username, fetched_is_senior )
+        self.main = MainWindow(app, username, fetched_is_senior)
         self.main.show()
 
     def go_back(self):

@@ -10,6 +10,7 @@ import glob
 import codecs
 import sqlite3
 import datetime
+import psycopg2
 from collections import namedtuple
 import xml.etree.ElementTree as ET
 
@@ -17,6 +18,7 @@ from Resources.ui_main_window import Ui_MainWindow
 from Libs.thumbnails import PreviewDelegate, PreviewModel
 from Libs.google_drvie import Drive
 from Libs.pollen import Pollen
+from Libs.connect_to_db import Connection
 
 __appname__ = "Pollen"
 preview = namedtuple("preview", ['id', 'path', 'image'])
@@ -41,8 +43,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.mode = "folder"
 
         # Load Database from Google Drive
-        self.drive = Drive()
-        self.drive.download_db()
+        # self.drive = Drive()
+        # self.drive.download_db()
 
         # Load Pollen classes
         self.load_predefined_classes(self.predef_classes_path)
@@ -330,7 +332,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.current_pollen.review_comment = self.review_comment_lineEdit.text()
             try:
                 self.save_review_to_db()
-            except sqlite3.OperationalError or sqlite3.IntegrityError:
+            except psycopg2.OperationalError or psycopg2.IntegrityError:
                 QMessageBox.critical(self, "Database Error", "Could not write to database, plase try again or restart the application.")
         self.saved = True
         self.current_pollen.labelled = True
@@ -341,7 +343,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.finished_folder()
 
     def save_to_db(self):
-        connection = sqlite3.connect("./Data/pollen.db")
+        connection = Connection().connect
         cursor = connection.cursor()
         pollen_info = [self.current_pollen.path,
                        self.current_pollen.class_,
@@ -349,18 +351,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                        self.current_pollen.comment,
                        self.current_pollen.user,
                        self.current_pollen.is_senior,
-                       datetime.datetime.now().strftime("%Y-%m-%d %H:%M")]
+                       datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")]
         try:
-            query = 'INSERT INTO annotation (path, class, confidence, comment, user, senior, timestamp) VALUES (?,?,?,?,?,?,?)'
+            query = 'INSERT INTO annotation (path, class, confidence, comment, user, senior, timestamp) VALUES (%s,%s,%s,%s,%s,%s,%s)'
             cursor.execute(query, pollen_info)
             connection.commit()
             connection.close()
             return True
-        except sqlite3.OperationalError or sqlite3.IntegrityError:
+        except psycopg2.OperationalError or psycopg2.IntegrityError:
             return False
         
     def save_review_to_db(self):
-        connection = sqlite3.connect("./Data/pollen.db")
+        connection = Connection().connect
         cursor = connection.cursor()
         review_info = [self.current_pollen.annotation_id,
                        self.current_pollen.review_score,
@@ -369,15 +371,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                        self.current_pollen.class_,
                        self.current_pollen.confidence,
                        self.current_pollen.comment,
-                       datetime.datetime.now().strftime("%Y-%m-%d %H:%M")]
+                       datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")]
 
         try:
-            query = 'INSERT INTO review (annotation_id, review_score, reviewer, review_comment, new_class, new_confidence, new_comment, timestamp) VALUES (?,?,?,?,?,?,?,?)'
+            query = 'INSERT INTO review (annotation_id, review_score, reviewer, review_comment, new_class, new_confidence, new_comment, timestamp) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)'
             cursor.execute(query, review_info)
             connection.commit()
             connection.close()
             return True
-        except sqlite3.OperationalError or sqlite3.IntegrityError:
+        except psycopg2.OperationalError or psycopg2.IntegrityError:
             return False
 
     def reset(self):
@@ -422,7 +424,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def add_names_to_combo(self):
         if self.names_loaded == True:
             return
-        connection = sqlite3.connect("./Data/pollen.db")
+        connection = Connection().connect
         cursor = connection.cursor()
         cursor.execute("SELECT DISTINCT user FROM annotation")
         users = cursor.fetchall()
@@ -440,10 +442,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.load_images(mode="DB")
 
     def fetch_annotation(self):
-        connection = sqlite3.connect("./Data/pollen.db")
+        connection = Connection().connect
         cursor = connection.cursor()
-        date_from = self.from_dateTimeEdit.dateTime().toPython().strftime("%Y-%m-%d %H:%M")
-        date_until = self.until_dateTimeEdit.dateTime().toPython().strftime("%Y-%m-%d %H:%M")
+        date_from = self.from_dateTimeEdit.dateTime().toPython().strftime("%Y-%m-%d %H:%M:%S")
+        date_until = self.until_dateTimeEdit.dateTime().toPython().strftime("%Y-%m-%d %H:%M:S")
         user = self.user_list_comboBox.currentText()
         all_times = self.all_times_checkBox.isChecked()
         include_senior = self.include_senior_checkBox.isChecked()
@@ -451,13 +453,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         query_params_map = {
             (True, True, True): ("SELECT * FROM annotation", ()),
             (True, False, True): ("SELECT * FROM annotation WHERE senior = 0", ()),
-            (True, True, False): ("SELECT * FROM annotation WHERE timestamp BETWEEN ? AND ?", (date_from, date_until)),
-            (True, False, False): ("SELECT * FROM annotation WHERE senior = 0 AND timestamp BETWEEN ? AND ?", (date_from, date_until)),
-            (False, True, True): (f"SELECT * FROM annotation WHERE user = ?", (user,)),
-            (False, True, False): (f"SELECT * FROM annotation WHERE user = ? AND timestamp BETWEEN ? AND ?", (user, date_from, date_until)),
+            (True, True, False): ("SELECT * FROM annotation WHERE timestamp BETWEEN %s AND %s", (date_from, date_until)),
+            (True, False, False): ("SELECT * FROM annotation WHERE senior = 0 AND timestamp BETWEEN %s AND %s", (date_from, date_until)),
+            (False, True, True): ("SELECT * FROM annotation WHERE user = %s", (user,)),
+            (False, True, False): ("SELECT * FROM annotation WHERE user = %s AND timestamp BETWEEN %s AND %s", (user, date_from, date_until)),
             # Not Callable. When a name is selected, the Senior option should ALWAYS be True
-            # (False, False, False): (f"SELECT * FROM annotation WHERE user = ? AND senior = 0 AND timestamp BETWEEN ? AND ?", (user, date_from, date_until)),
-            # (False, False, True): (f"SELECT * FROM annotation WHERE user = ? AND senior = 0", (user,)),
+            # (False, False, False): (f"SELECT * FROM annotation WHERE user = %s AND senior = 0 AND timestamp BETWEEN %s AND %s", (user, date_from, date_until)),
+            # (False, False, True): (f"SELECT * FROM annotation WHERE user = %s AND senior = 0", (user,)),
         }
 
         query, params = query_params_map[(user == "All Users", include_senior, all_times)]
