@@ -35,7 +35,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.user = user
         self.is_senior = is_senior
         self.index = 0
-        # self.index = 0
         self.current_pollen = ""
         self.saved = False
         self.names_loaded = False
@@ -135,7 +134,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.prevButton.setEnabled(False)
             self.actionPrevious.setEnabled(False)
 
-
     def create_pollen_objects(self, mode):
         if mode == "folder":
             paths = glob.glob(f"{self.images_directory_path}/*.jp*g")
@@ -145,7 +143,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 paths.append(row[1])
         for n, fn in enumerate(paths):
             p = Pollen()
-            p.path = fn
+            p.path = os.path.basename(fn)
             p.user = self.user
             p.is_senior = self.is_senior
             p.pixmap = QPixmap(fn)
