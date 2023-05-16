@@ -39,11 +39,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.saved = False
         self.names_loaded = False
         self.loaded_data = {}
-        self.mode = "folder"
+        self.mode = "annotation"
 
         # Load Database from Google Drive
-        # self.drive = Drive()
-        # self.drive.download_db()
+        self.drive = Drive()
 
         # Load Pollen classes
         self.load_predefined_classes(self.predef_classes_path)
@@ -120,9 +119,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def aboutQt(self):
         QApplication.aboutQt()
 
-    def load_images(self, *,mode='folder'):
+    def load_images(self, *,mode='annotation'):
         self.reset()
-        if mode == 'folder':
+        if mode == 'annotation':
             self.open_dir_dialog()
         self.create_pollen_objects(mode)
         if self.images:
@@ -134,10 +133,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.prevButton.setEnabled(False)
             self.actionPrevious.setEnabled(False)
 
+    def load_images_from_google(self):
+        self.reset()
+        
+
+
     def create_pollen_objects(self, mode):
-        if mode == "folder":
+        if mode == "annotation":
             paths = glob.glob(f"{self.images_directory_path}/*.jp*g")
-        elif mode == "DB":
+        elif mode == "review":
             paths = []
             for row in self.loaded_data:
                 paths.append(row[1])
@@ -151,7 +155,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 p.get_image_metadata()
             except:
                 print(f"No metadata at {fn}")
-            if mode == "DB":
+            if mode == "review":
                 p.annotation_id = self.loaded_data[n][0]
                 p.previous_class = self.loaded_data[n][2]
                 p.previous_confidence = self.loaded_data[n][3]
@@ -223,9 +227,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             col += 1        
 
     def show_thumbnails(self, mode):
-        if mode == "folder":
+        if mode == "annotation":
             paths = glob.glob(f"{self.images_directory_path}/*.jp*g")
-        elif mode == "DB":
+        elif mode == "review":
             paths = []
             for row in self.loaded_data:
                 paths.append(row[1])
@@ -261,7 +265,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._set_style_sheet(self.current_pollen.labelled)
         self.reset_inputs()
         self.show_image()
-        if self.mode == "DB":
+        if self.mode == "review":
             self.load_data_to_ui()
 
     def next(self):
@@ -271,7 +275,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._set_style_sheet(self.current_pollen.labelled)
         self.reset_inputs()
         self.show_image()
-        if self.mode == "DB":
+        if self.mode == "review":
             self.load_data_to_ui()
     
     def _keep_in_range(self):
@@ -324,7 +328,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if not self.save_to_db():
             QMessageBox.critical(self, "Database Error", "Could not write to database, plase try again or restart the application.")
             return
-        if self.mode == "DB":
+        if self.mode == "review":
             self.current_pollen.reviewer = self.user
             self.current_pollen.review_score = self.score_spinBox.value()
             self.current_pollen.review_comment = self.review_comment_lineEdit.text()
@@ -414,9 +418,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def tab_selected(self, tab_index):
         if tab_index == 0:
-            self.mode = "folder"
+            self.mode = "annotation"
         elif tab_index == 1:
-            self.mode = "DB"
+            self.mode = "review"
             self.add_names_to_combo()
 
     def add_names_to_combo(self):
@@ -437,7 +441,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if not self.check_loaded():
             return
         self.load_data_to_ui()
-        self.load_images(mode="DB")
+        self.load_images(mode="review")
 
     def fetch_annotation(self):
         connection = Connection().connect
