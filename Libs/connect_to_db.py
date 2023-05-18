@@ -9,7 +9,7 @@ class Connection():
                                       password="W2JF95zE1czTx9ngxrZyX2nHxi3Drm",
                                       port="5432")
 
-    def create_table(self):
+    def recreate_table(self):
         self.query = """
         DROP TABLE IF EXISTS users CASCADE;
         CREATE TABLE "users" (

@@ -16,9 +16,10 @@ import xml.etree.ElementTree as ET
 
 from Resources.ui_main_window import Ui_MainWindow
 from Libs.thumbnails import PreviewDelegate, PreviewModel
-from Libs.google_drvie import Drive
+from Libs.google_drive import Drive
 from Libs.pollen import Pollen
 from Libs.connect_to_db import Connection
+from Libs.drive_directory_dialog import DriveTreeDialog
 
 __appname__ = "Pollen"
 preview = namedtuple("preview", ['id', 'path', 'image'])
@@ -61,7 +62,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # Set actions
         self.actionQuit.triggered.connect(self.quit)
-        self.actionOpen_Dir.triggered.connect(self.load_images)
+        # self.actionOpen_Dir.triggered.connect(self.load_images)
+        self.actionOpen_Dir.triggered.connect(self.load_images_from_google)
         self.actionNext.triggered.connect(self.next)
         self.actionPrevious.triggered.connect(self.previous)
         self.actionSave.triggered.connect(self.save)
@@ -134,9 +136,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.actionPrevious.setEnabled(False)
 
     def load_images_from_google(self):
-        self.reset()
-        
+        dialog = DriveTreeDialog()
+        dialog.exec()
+        print(dialog.selected_folder)
+        self.get_img_paths(dialog.selected_folder)
 
+
+    def get_img_paths(self, folder):
+        pass
 
     def create_pollen_objects(self, mode):
         if mode == "annotation":

@@ -38,14 +38,7 @@ class Drive():
 # Create a Drive API client object
 drive_service = build('drive', 'v3', credentials=Drive().creds)
 
-from google.oauth2.credentials import Credentials
-from googleapiclient.discovery import build
 from PySide6.QtWidgets import QApplication, QTreeWidget, QTreeWidgetItem, QWidget, QVBoxLayout
-
-
-# Set up your credentials and create the drive_service object
-# creds = Credentials.from_authorized_user_file('credentials.json')
-# drive_service = build('drive', 'v3', credentials=creds)
 
 
 class DriveTreeWidget(QTreeWidget):
@@ -59,11 +52,22 @@ class DriveTreeWidget(QTreeWidget):
         response = drive_service.files().list(q=query, fields="files(id, name, mimeType)", pageSize=1000).execute()
         items = response.get('files', [])
         for item in items:
+            item_id = item['id']
+            item_name = item['name']
+            if item_name == 'Data' and item['mimeType'] == 'application/vnd.google-apps.folder':
+                self.fetch_subdirectories(parent_item, item_id)
+                break
+
+    def fetch_subdirectories(self, parent_item, parent_id):
+        query = f"'{parent_id}' in parents and trashed=false"
+        response = drive_service.files().list(q=query, fields="files(id, name, mimeType)", pageSize=1000).execute()
+        items = response.get('files', [])
+        for item in items:
             if item['mimeType'] == 'application/vnd.google-apps.folder':
                 item_id = item['id']
                 item_name = item['name']
                 child_item = QTreeWidgetItem(parent_item, [item_name])
-                self.fetch_directory_tree(child_item, item_id)
+                self.fetch_subdirectories(child_item, item_id)
 
 
 # Create a Qt application object
