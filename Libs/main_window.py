@@ -19,7 +19,7 @@ from Libs.thumbnails import PreviewDelegate, PreviewModel
 from Libs.google_drive import Drive
 from Libs.pollen import Pollen
 from Libs.connect_to_db import Connection
-from Libs.drive_directory_dialog import DriveTreeDialog
+from Libs.drive_dialog import DriveTreeDialog
 
 __appname__ = "Pollen"
 preview = namedtuple("preview", ['id', 'path', 'image'])
@@ -41,9 +41,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.names_loaded = False
         self.loaded_data = {}
         self.mode = "annotation"
+        self.source = "Drive"
 
         # Load Database from Google Drive
         self.drive = Drive()
+        self.drive.download_db()
 
         # Load Pollen classes
         self.load_predefined_classes(self.predef_classes_path)
@@ -62,8 +64,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # Set actions
         self.actionQuit.triggered.connect(self.quit)
-        # self.actionOpen_Dir.triggered.connect(self.load_images)
-        self.actionOpen_Dir.triggered.connect(self.load_images_from_google)
+        self.actionOpen_Dir.triggered.connect(self.load_images_offline)
+        self.actionOpen_Drive_Dir.triggered.connect(self.load_images_from_google)
         self.actionNext.triggered.connect(self.next)
         self.actionPrevious.triggered.connect(self.previous)
         self.actionSave.triggered.connect(self.save)
@@ -121,7 +123,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def aboutQt(self):
         QApplication.aboutQt()
 
-    def load_images(self, *,mode='annotation'):
+    def load_images_offline(self, *,mode='annotation'):
         self.reset()
         if mode == 'annotation':
             self.open_dir_dialog()
@@ -135,15 +137,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.prevButton.setEnabled(False)
             self.actionPrevious.setEnabled(False)
 
-    def load_images_from_google(self):
-        dialog = DriveTreeDialog()
-        dialog.exec()
-        print(dialog.selected_folder)
-        self.get_img_paths(dialog.selected_folder)
+    def load_images_from_google(self, *, mode='annotation'):
+        if mode == 'annotation':
+            dialog = DriveTreeDialog()
+            dialog.exec()
+            print(dialog.selected_folder)
+            self.img_names = self.drive.fetch_image_names_from_folder(dialog.selected_folder)
+        self.create_pollen_objects_from_drive(mode)
+        if self.images:
+            self.show_image()
+            # self.show_thumbnails(mode)
+            self.toggle_all_actions()
+            self.actionSave.setEnabled(False)
+            self.saveButton.setEnabled(False)
+            self.prevButton.setEnabled(False)
+            self.actionPrevious.setEnabled(False)
 
-
-    def get_img_paths(self, folder):
-        pass
 
     def create_pollen_objects(self, mode):
         if mode == "annotation":
@@ -162,6 +171,35 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 p.get_image_metadata()
             except:
                 print(f"No metadata at {fn}")
+            if mode == "review":
+                p.annotation_id = self.loaded_data[n][0]
+                p.previous_class = self.loaded_data[n][2]
+                p.previous_confidence = self.loaded_data[n][3]
+                p.previous_comment = self.loaded_data[n][4]
+                p.previous_user = self.loaded_data[n][5]
+                p.previous_is_senior = self.loaded_data[n][6]
+                p.previous_timestamp = self.loaded_data[n][7]
+            self.images.append(p)
+        try:
+            self.current_pollen = self.images[self.index]
+        except IndexError:
+            QMessageBox.information(self, "Empty Directory", "The current directory does not contain any pictures.")
+
+    def create_pollen_objects_from_drive(self, mode):
+        if mode == "review":
+            self.img_names = []
+            for row in self.loaded_data:
+                self.img_names.append(row[1])
+        for n, name in enumerate(self.img_names):
+            p = Pollen()
+            p.path = name
+            p.user = self.user
+            p.is_senior = self.is_senior
+            p.pixmap = self.drive.get_pixmap_from_drive(name)
+            try:
+                p.get_image_metadata()
+            except:
+                print(f"No metadata at {name}")
             if mode == "review":
                 p.annotation_id = self.loaded_data[n][0]
                 p.previous_class = self.loaded_data[n][2]
@@ -208,11 +246,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 # if the child element is a directory, recursively add child items
                 self._add_child_items(child_element, item)
 
-
     def show_image(self):
-        if not os.path.exists(self.current_pollen.path):
-           QMessageBox.warning(self, "No Image Found", "The current records path does not exist.")
+        # if not os.path.exists(self.current_pollen.path):
+        #    QMessageBox.warning(self, "No Image Found", "The current records path does not exist.")
         current_image = self.images[self.index].pixmap
+        if current_image is None:
+            self.pictureLabel_2.setText("Image Could not be loaded")
+            return
         size = self.pictureLabel.size()
         scaled_image = current_image.scaled(size, aspectMode=Qt.KeepAspectRatio)
         self.pictureLabel.setPixmap(scaled_image)
@@ -381,7 +421,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                        self.current_pollen.confidence,
                        self.current_pollen.comment,
                        datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")]
-
         try:
             query = 'INSERT INTO review (annotation_id, review_score, reviewer, review_comment, new_class, new_confidence, new_comment, timestamp) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)'
             cursor.execute(query, review_info)
@@ -401,6 +440,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._set_style_sheet(False)
         self.toggle_all_actions(False)
         self.pictureLabel.setText("Open a Directory to show images.")
+        self.pictureLabel_2.setText("Load from Database to show images.")
 
     def toggle_all_actions(self, enable=True):
         self.saveButton.setEnabled(enable)
@@ -448,7 +488,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if not self.check_loaded():
             return
         self.load_data_to_ui()
-        self.load_images(mode="review")
+        self.load_images_from_google(mode="review")
 
     def fetch_annotation(self):
         connection = Connection().connect

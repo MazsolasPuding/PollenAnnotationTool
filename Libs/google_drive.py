@@ -10,9 +10,10 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-from googleapiclient.http import MediaFileUpload
+from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
 
-from PySide6.QtWidgets import QTreeWidgetItem
+from PySide6.QtWidgets import QTreeWidgetItem, QLabel
+from PySide6.QtGui import QImage, QPixmap
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/drive']
@@ -41,8 +42,6 @@ class Drive():
         except HttpError as error:
             # TODO(developer) - Handle errors from drive API.
             print(f'An error occurred: {error}')
-
-            
 
     def download_db(self):
         try:
@@ -98,6 +97,43 @@ class Drive():
         else:
             self.fetch_directory_tree(root_item)
 
+    def fetch_image_names_from_folder(self, folder_name):
+        query = f"name='{folder_name}' and mimeType='application/vnd.google-apps.folder' and trashed=false"
+        response = self.service.files().list(q=query, fields="files(id)", pageSize=1).execute()
+        items = response.get('files', [])
+        if items:
+            folder_id = items[0]['id']
+            query = f"'{folder_id}' in parents and mimeType contains 'image/' and trashed=false"
+            response = self.service.files().list(q=query, fields="files(name)", pageSize=1000).execute()
+            image_items = response.get('files', [])
+            image_ids = [item['name'] for item in image_items]
+            return image_ids
+        else:
+            return []
+    
+    def get_pixmap_from_drive(self, image_name):
+        query = f"name='{image_name}' and mimeType contains 'image/' and trashed=false"
+        try:
+            response = self.service.files().list(q=query, fields="files(id)", pageSize=1).execute()
+            items = response.get('files', [])
+            if items:
+                image_id = items[0]['id']
+                request = self.service.files().get_media(fileId=image_id)
+                file_stream = io.BytesIO()
+                downloader = MediaIoBaseDownload(file_stream, request)
+                done = False
+                while not done:
+                    _, done = downloader.next_chunk()
+    
+                image_data = file_stream.getvalue()
+                image = QImage.fromData(image_data)
+                if not image.isNull():
+                    pixmap = QPixmap.fromImage(image)
+                    return pixmap
+        except Exception as e:
+            print(f"Error fetching image from Google Drive: {str(e)}")
+    
+        return None
 
 
 

@@ -999,6 +999,8 @@ border: 1px solid black;
     <bool>false</bool>
    </attribute>
    <addaction name="actionSign_Out"/>
+   <addaction name="separator"/>
+   <addaction name="actionOpen_Drive_Dir"/>
    <addaction name="actionOpen_Dir"/>
    <addaction name="separator"/>
    <addaction name="actionSave"/>
@@ -1104,6 +1106,15 @@ border: 1px solid black;
    </property>
    <property name="text">
     <string>Sign Out</string>
+   </property>
+  </action>
+  <action name="actionOpen_Drive_Dir">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/Icons/drive.png</normaloff>:/Icons/drive.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open Drive Dir</string>
    </property>
   </action>
  </widget>
