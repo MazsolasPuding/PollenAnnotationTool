@@ -42,7 +42,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.mode = "annotation"
 
         # Load Database from Google Drive
-        self.drive = Drive()
+        # self.drive = Drive()
 
         # Load Pollen classes
         self.load_predefined_classes(self.predef_classes_path)
@@ -145,16 +145,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             paths = []
             for row in self.loaded_data:
                 paths.append(row[1])
-        for n, fn in enumerate(paths):
+        for n, path in enumerate(paths):
             p = Pollen()
-            p.path = os.path.basename(fn)
+            p.path = path
             p.user = self.user
             p.is_senior = self.is_senior
-            p.pixmap = QPixmap(fn)
+            p.pixmap = QPixmap(path)
             try:
                 p.get_image_metadata()
             except:
-                print(f"No metadata at {fn}")
+                print(f"No metadata at {path}")
             if mode == "review":
                 p.annotation_id = self.loaded_data[n][0]
                 p.previous_class = self.loaded_data[n][2]
@@ -203,8 +203,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
     def show_image(self):
+        self.load_metadata_to_table()
         if not os.path.exists(self.current_pollen.path):
-           QMessageBox.warning(self, "No Image Found", "The current records path does not exist.")
+           self.pictureLabel_2.setText("Path Error. The current was not found on your system.")
+           return
         current_image = self.images[self.index].pixmap
         size = self.pictureLabel.size()
         scaled_image = current_image.scaled(size, aspectMode=Qt.KeepAspectRatio)
@@ -212,7 +214,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         size = self.pictureLabel_2.size()
         scaled_image = current_image.scaled(size, aspectMode=Qt.KeepAspectRatio)
         self.pictureLabel_2.setPixmap(scaled_image)
-        self.load_metadata_to_table()
 
     def load_metadata_to_table(self):
         metadata = self.current_pollen.metadata
@@ -233,9 +234,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             paths = []
             for row in self.loaded_data:
                 paths.append(row[1])
-        for n, fn in enumerate(paths):
-            image = QImage(fn)
-            item = preview(n, fn, image)
+        for n, path in enumerate(paths):
+            image = QImage(path)
+            item = preview(n, path, image)
             self.model.previews.append(item)
         self.model.layoutChanged.emit()
         self.thumbnailsView.resizeRowsToContents()
@@ -313,14 +314,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.reset()
         QMessageBox.information(self, "Finished", "You have labelled all pictures in this folder.")
 
-    def zoom_in(self):
-        pass
-
-    def zoom_out(self):
-        pass
-
-    def fit_window(self):
-        pass
 
     def save(self):
         self.current_pollen.confidence = self.confidenceSlider.value()
@@ -340,7 +333,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.current_pollen.labelled = True
         self._set_style_sheet(True)
         print(self.current_pollen)
-        self.drive.update_db()
         if not self._is_remaining():
             self.finished_folder()
 
@@ -454,9 +446,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         query_params_map = {
             (True, True, True): ("SELECT * FROM annotation", ()),
-            (True, False, True): ("SELECT * FROM annotation WHERE senior = 0", ()),
+            (True, False, True): ("SELECT * FROM annotation WHERE senior = False", ()),
             (True, True, False): ("SELECT * FROM annotation WHERE timestamp BETWEEN %s AND %s", (date_from, date_until)),
-            (True, False, False): ("SELECT * FROM annotation WHERE senior = 0 AND timestamp BETWEEN %s AND %s", (date_from, date_until)),
+            (True, False, False): ("SELECT * FROM annotation WHERE senior = False AND timestamp BETWEEN %s AND %s", (date_from, date_until)),
             (False, True, True): ("SELECT * FROM annotation WHERE username = %s", (user,)),
             (False, True, False): ("SELECT * FROM annotation WHERE username = %s AND timestamp BETWEEN %s AND %s", (user, date_from, date_until)),
             # Not Callable. When a name is selected, the Senior option should ALWAYS be True

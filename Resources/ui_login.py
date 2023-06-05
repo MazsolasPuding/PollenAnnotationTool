@@ -132,6 +132,14 @@ class Ui_Login(object):
 
         self.verticalLayout.addWidget(self.passwordEdit)
 
+        self.errorLabel = QLabel(Login)
+        self.errorLabel.setObjectName(u"errorLabel")
+        self.errorLabel.setEnabled(True)
+        self.errorLabel.setAcceptDrops(False)
+        self.errorLabel.setStyleSheet(u"font: 12pt \"Corbel\"; color:rgb(200, 0, 0);")
+
+        self.verticalLayout.addWidget(self.errorLabel)
+
 
         self.horizontalLayout_3.addLayout(self.verticalLayout)
 
@@ -141,14 +149,6 @@ class Ui_Login(object):
 
 
         self.verticalLayout_2.addLayout(self.horizontalLayout_3)
-
-        self.errorLabel = QLabel(Login)
-        self.errorLabel.setObjectName(u"errorLabel")
-        self.errorLabel.setEnabled(True)
-        self.errorLabel.setAcceptDrops(False)
-        self.errorLabel.setStyleSheet(u"font: 12pt \"Corbel\"; color:rgb(200, 0, 0);")
-
-        self.verticalLayout_2.addWidget(self.errorLabel)
 
         self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 

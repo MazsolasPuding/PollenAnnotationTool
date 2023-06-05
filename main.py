@@ -148,9 +148,9 @@ if __name__ == "__main__":
         widget.show()
 
     app.aboutToQuit.connect(restart)
-    widget.show()
-    # window = MainWindow(app, "horvada", 1)
-    # window.show()
+    # widget.show()
+    window = MainWindow(app, "horvada", 1)
+    window.show()
     sys.exit(app.exec())
 
 

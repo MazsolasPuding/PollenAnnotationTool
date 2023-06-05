@@ -161,6 +161,14 @@ class Ui_Create_account(object):
 
         self.verticalLayout.addWidget(self.comboBox)
 
+        self.errorLabel = QLabel(Create_account)
+        self.errorLabel.setObjectName(u"errorLabel")
+        self.errorLabel.setEnabled(True)
+        self.errorLabel.setAcceptDrops(False)
+        self.errorLabel.setStyleSheet(u"font: 12pt \"Corbel\"; color:rgb(200, 0, 0);")
+
+        self.verticalLayout.addWidget(self.errorLabel)
+
 
         self.horizontalLayout_3.addLayout(self.verticalLayout)
 
@@ -174,14 +182,6 @@ class Ui_Create_account(object):
         self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout_2.addItem(self.verticalSpacer_2)
-
-        self.errorLabel = QLabel(Create_account)
-        self.errorLabel.setObjectName(u"errorLabel")
-        self.errorLabel.setEnabled(True)
-        self.errorLabel.setAcceptDrops(False)
-        self.errorLabel.setStyleSheet(u"font: 12pt \"Corbel\"; color:rgb(200, 0, 0);")
-
-        self.verticalLayout_2.addWidget(self.errorLabel)
 
         self.horizontalLayout_4 = QHBoxLayout()
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
