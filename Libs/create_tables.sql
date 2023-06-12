@@ -1,3 +1,6 @@
+-- This SQL code is for Deleting ALL data from all of the Tables in the Database and recreating Them.
+-- Do NOT use it unless you have Backed up the online database AND you know what your doing.
+
 DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE "users" (
 	"username"	VARCHAR(255) NOT NULL,

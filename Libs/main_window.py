@@ -1,22 +1,20 @@
-from pprint import pprint
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QTableWidgetItem, QTreeWidgetItem
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QtMsgType, qInstallMessageHandler
 from PySide6.QtGui import QImage, QPixmap
 
 import os
 import sys
 import glob
 import codecs
-import sqlite3
 import datetime
 import psycopg2
+from pprint import pprint
 from collections import namedtuple
 import xml.etree.ElementTree as ET
 
 from Resources.ui_main_window import Ui_MainWindow
 from Libs.thumbnails import PreviewDelegate, PreviewModel
-from Libs.google_drvie import Drive
 from Libs.pollen import Pollen
 from Libs.connect_to_db import Connection
 
@@ -41,9 +39,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.loaded_data = {}
         self.mode = "annotation"
 
-        # Load Database from Google Drive
-        # self.drive = Drive()
-
         # Load Pollen classes
         self.load_predefined_classes(self.predef_classes_path)
         self.toggle_all_actions(False)
@@ -67,9 +62,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionSave.triggered.connect(self.save)
         self.actionAbout.triggered.connect(self.about)
         self.actionAboutQt.triggered.connect(self.aboutQt)
-        self.actionZoom_In.triggered.connect(self.zoom_in)
-        self.actionZoom_Out.triggered.connect(self.zoom_out)
-        self.actionFit_Window.triggered.connect(self.fit_window)
         self.actionSign_Out.triggered.connect(self.sing_out)
 
         self.pollenListWidget.itemClicked.connect(self.class_selected)
@@ -472,7 +464,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def load_data_to_ui(self):
         self.lcdNumber.display(len(self.loaded_data))
-        pprint(self.loaded_data)
+        # pprint(self.loaded_data)
         self.annotation_id_label.setText(str(self.loaded_data[self.index][0]))
         self.path_label.setText(os.path.basename(self.loaded_data[self.index][1]))
         self.class_label.setText(self.loaded_data[self.index][2])

@@ -1,18 +1,18 @@
-from PySide6.QtWidgets import QApplication, QDialog, QWidget, QStackedWidget, QLineEdit
-from PySide6.QtCore import QObject, Signal
+"""
+Main Pytho file for running the Annotation Tool.
+"""
 
 import sys
 import base64
+
+from PySide6.QtWidgets import QApplication, QDialog, QStackedWidget, QLineEdit
+from PySide6.QtCore import qInstallMessageHandler
 
 from Resources.ui_welcome import Ui_Welcome
 from Resources.ui_login import Ui_Login
 from Resources.ui_create_account import Ui_Create_account
 from Libs.main_window import MainWindow
 from Libs.connect_to_db import Connection
-
-"""
-Mac init.
-"""
 
 
 class Welcome(QDialog, Ui_Welcome):
@@ -23,6 +23,7 @@ class Welcome(QDialog, Ui_Welcome):
 
         self.loginButton.clicked.connect(self.goto_login)
         self.createButton.clicked.connect(self.goto_create)
+        qInstallMessageHandler(self.customMessageHandler)
 
     def goto_login(self):
         login = Login(self.widget)
@@ -33,6 +34,10 @@ class Welcome(QDialog, Ui_Welcome):
         create = CreateAccount(self.widget)
         self.widget.addWidget(create)
         self.widget.setCurrentIndex(self.widget.currentIndex() + 1)
+
+    def customMessageHandler(self, type_, context, message):
+        if "QSvgHandler: Image filename is empty" in message:
+            return
 
 
 class CreateAccount(QDialog, Ui_Create_account):
@@ -61,17 +66,17 @@ class CreateAccount(QDialog, Ui_Create_account):
         senior = True if experience == "Senior" else False
         self.errorLabel.setText("")
 
-        # try:
-        connection = Connection().connect
-        cursor = connection.cursor()
-        encoded = base64.b64encode(password.encode("utf-8"))
-        user_info = [username, str(encoded), senior]
-        query = """INSERT INTO users (username, password, senior)
-                   VALUES (%s,%s,%s)"""
-        cursor.execute(query, user_info)
-        # except:
-        #     self.errorLabel.setText("Username already in use.")
-        #     return
+        try:
+            connection = Connection().connect
+            cursor = connection.cursor()
+            encoded = base64.b64encode(password.encode("utf-8"))
+            user_info = [username, str(encoded), senior]
+            query = """INSERT INTO users (username, password, senior)
+                    VALUES (%s,%s,%s)"""
+            cursor.execute(query, user_info)
+        except:
+            self.errorLabel.setText("Username already in use.")
+            return
         connection.commit()
         connection.close()
         self.goto_login()
@@ -148,9 +153,10 @@ if __name__ == "__main__":
         widget.show()
 
     app.aboutToQuit.connect(restart)
-    # widget.show()
-    window = MainWindow(app, "horvada", 1)
-    window.show()
+    widget.show()
+    # The code below launches the Main window of the app for Debugging.
+    # window = MainWindow(app, "horvada", 1)
+    # window.show()
     sys.exit(app.exec())
 
 

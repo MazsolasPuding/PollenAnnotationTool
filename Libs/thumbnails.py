@@ -1,3 +1,5 @@
+"""Generate Thumbnails for the thumbnails dock."""
+
 import glob
 import math
 import sys
