@@ -1,5 +1,5 @@
 
-from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QTableWidgetItem, QTreeWidgetItem
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QTableWidgetItem, QTreeWidgetItem, QSizePolicy
 from PySide6.QtCore import Qt, QtMsgType, qInstallMessageHandler
 from PySide6.QtGui import QImage, QPixmap
 
@@ -200,12 +200,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
            self.pictureLabel_2.setText("Path Error. The current was not found on your system.")
            return
         current_image = self.images[self.index].pixmap
-        size = self.pictureLabel.size()
-        scaled_image = current_image.scaled(size, aspectMode=Qt.KeepAspectRatio)
-        self.pictureLabel.setPixmap(scaled_image)
-        size = self.pictureLabel_2.size()
-        scaled_image = current_image.scaled(size, aspectMode=Qt.KeepAspectRatio)
-        self.pictureLabel_2.setPixmap(scaled_image)
+        self.scale_image(current_image, self.pictureLabel)
+        self.scale_image(current_image, self.pictureLabel_2)
+
+    def scale_image(self, image, label):
+        size = label.size()
+        scaled_image = image.scaled(size, aspectMode=Qt.KeepAspectRatio)
+        label.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
+        label.setPixmap(scaled_image)
 
     def load_metadata_to_table(self):
         metadata = self.current_pollen.metadata

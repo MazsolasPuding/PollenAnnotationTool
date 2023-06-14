@@ -45,6 +45,12 @@ border: 1px solid black;
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>
          <widget class="QLabel" name="pictureLabel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="styleSheet">
            <string notr="true">background-color:rgb(216, 246, 255);
 font: 20pt &quot;SansSerif&quot;;</string>

@@ -109,6 +109,11 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.pictureLabel = QLabel(self.annotation_tab)
         self.pictureLabel.setObjectName(u"pictureLabel")
+        sizePolicy = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.pictureLabel.sizePolicy().hasHeightForWidth())
+        self.pictureLabel.setSizePolicy(sizePolicy)
         self.pictureLabel.setStyleSheet(u"background-color:rgb(216, 246, 255);\n"
 "font: 20pt \"SansSerif\";")
         self.pictureLabel.setAlignment(Qt.AlignCenter)
@@ -122,11 +127,11 @@ class Ui_MainWindow(object):
         self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
         self.pictureLabel_2 = QLabel(self.review_tab)
         self.pictureLabel_2.setObjectName(u"pictureLabel_2")
-        sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pictureLabel_2.sizePolicy().hasHeightForWidth())
-        self.pictureLabel_2.setSizePolicy(sizePolicy)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.pictureLabel_2.sizePolicy().hasHeightForWidth())
+        self.pictureLabel_2.setSizePolicy(sizePolicy1)
         self.pictureLabel_2.setMinimumSize(QSize(800, 0))
         self.pictureLabel_2.setStyleSheet(u"background-color:rgb(216, 246, 255);\n"
 "font: 20pt \"SansSerif\";")
@@ -138,11 +143,11 @@ class Ui_MainWindow(object):
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
         self.query_frame = QFrame(self.review_tab)
         self.query_frame.setObjectName(u"query_frame")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.query_frame.sizePolicy().hasHeightForWidth())
-        self.query_frame.setSizePolicy(sizePolicy1)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.query_frame.sizePolicy().hasHeightForWidth())
+        self.query_frame.setSizePolicy(sizePolicy2)
         self.query_frame.setMinimumSize(QSize(300, 0))
         self.query_frame.setStyleSheet(u"QFrame#query_frame{\n"
 "border: 1px solid black;\n"
@@ -153,11 +158,11 @@ class Ui_MainWindow(object):
         self.verticalLayout_9.setObjectName(u"verticalLayout_9")
         self.label_28 = QLabel(self.query_frame)
         self.label_28.setObjectName(u"label_28")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.label_28.sizePolicy().hasHeightForWidth())
-        self.label_28.setSizePolicy(sizePolicy2)
+        sizePolicy3 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.label_28.sizePolicy().hasHeightForWidth())
+        self.label_28.setSizePolicy(sizePolicy3)
         self.label_28.setMinimumSize(QSize(0, 30))
         self.label_28.setAlignment(Qt.AlignCenter)
 
@@ -250,11 +255,11 @@ class Ui_MainWindow(object):
 
         self.lcdNumber = QLCDNumber(self.query_frame)
         self.lcdNumber.setObjectName(u"lcdNumber")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.lcdNumber.sizePolicy().hasHeightForWidth())
-        self.lcdNumber.setSizePolicy(sizePolicy3)
+        sizePolicy4 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.lcdNumber.sizePolicy().hasHeightForWidth())
+        self.lcdNumber.setSizePolicy(sizePolicy4)
         self.lcdNumber.setMinimumSize(QSize(0, 30))
 
         self.horizontalLayout_13.addWidget(self.lcdNumber)
@@ -269,8 +274,8 @@ class Ui_MainWindow(object):
 
         self.data_frame = QFrame(self.review_tab)
         self.data_frame.setObjectName(u"data_frame")
-        sizePolicy1.setHeightForWidth(self.data_frame.sizePolicy().hasHeightForWidth())
-        self.data_frame.setSizePolicy(sizePolicy1)
+        sizePolicy2.setHeightForWidth(self.data_frame.sizePolicy().hasHeightForWidth())
+        self.data_frame.setSizePolicy(sizePolicy2)
         self.data_frame.setMinimumSize(QSize(300, 0))
         self.data_frame.setStyleSheet(u"QFrame#data_frame{\n"
 "border: 1px solid black;\n"
@@ -281,8 +286,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
         self.label_27 = QLabel(self.data_frame)
         self.label_27.setObjectName(u"label_27")
-        sizePolicy3.setHeightForWidth(self.label_27.sizePolicy().hasHeightForWidth())
-        self.label_27.setSizePolicy(sizePolicy3)
+        sizePolicy4.setHeightForWidth(self.label_27.sizePolicy().hasHeightForWidth())
+        self.label_27.setSizePolicy(sizePolicy4)
         self.label_27.setMinimumSize(QSize(0, 30))
         self.label_27.setAlignment(Qt.AlignCenter)
 
@@ -436,8 +441,8 @@ class Ui_MainWindow(object):
 
         self.review_frame = QFrame(self.review_tab)
         self.review_frame.setObjectName(u"review_frame")
-        sizePolicy1.setHeightForWidth(self.review_frame.sizePolicy().hasHeightForWidth())
-        self.review_frame.setSizePolicy(sizePolicy1)
+        sizePolicy2.setHeightForWidth(self.review_frame.sizePolicy().hasHeightForWidth())
+        self.review_frame.setSizePolicy(sizePolicy2)
         self.review_frame.setMinimumSize(QSize(300, 0))
         self.review_frame.setStyleSheet(u"QFrame#review_frame{\n"
 "border: 1px solid black;\n"
@@ -448,8 +453,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
         self.label_26 = QLabel(self.review_frame)
         self.label_26.setObjectName(u"label_26")
-        sizePolicy3.setHeightForWidth(self.label_26.sizePolicy().hasHeightForWidth())
-        self.label_26.setSizePolicy(sizePolicy3)
+        sizePolicy4.setHeightForWidth(self.label_26.sizePolicy().hasHeightForWidth())
+        self.label_26.setSizePolicy(sizePolicy4)
         self.label_26.setMinimumSize(QSize(0, 30))
         self.label_26.setAlignment(Qt.AlignCenter)
 
@@ -515,11 +520,11 @@ class Ui_MainWindow(object):
         MainWindow.setMenuBar(self.menubar)
         self.thumbnailDock = QDockWidget(MainWindow)
         self.thumbnailDock.setObjectName(u"thumbnailDock")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.thumbnailDock.sizePolicy().hasHeightForWidth())
-        self.thumbnailDock.setSizePolicy(sizePolicy4)
+        sizePolicy5 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(0)
+        sizePolicy5.setHeightForWidth(self.thumbnailDock.sizePolicy().hasHeightForWidth())
+        self.thumbnailDock.setSizePolicy(sizePolicy5)
         self.thumbnailDock.setMinimumSize(QSize(288, 300))
         self.thumbnailDock.setStyleSheet(u"QDockWidget#thumbnailDock{\n"
 "border: 1px solid black;\n"
@@ -546,8 +551,8 @@ class Ui_MainWindow(object):
         MainWindow.addDockWidget(Qt.LeftDockWidgetArea, self.thumbnailDock)
         self.metadataDock = QDockWidget(MainWindow)
         self.metadataDock.setObjectName(u"metadataDock")
-        sizePolicy4.setHeightForWidth(self.metadataDock.sizePolicy().hasHeightForWidth())
-        self.metadataDock.setSizePolicy(sizePolicy4)
+        sizePolicy5.setHeightForWidth(self.metadataDock.sizePolicy().hasHeightForWidth())
+        self.metadataDock.setSizePolicy(sizePolicy5)
         self.metadataDock.setMinimumSize(QSize(100, 450))
         self.metadataDock.setStyleSheet(u"QDockWidget#metadataDock{\n"
 "border: 1px solid black;\n"
