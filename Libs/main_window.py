@@ -7,9 +7,9 @@ import os
 import sys
 import glob
 import codecs
+import logging
 import datetime
 import psycopg2
-from pprint import pprint
 from collections import namedtuple
 import xml.etree.ElementTree as ET
 
@@ -91,6 +91,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.load_annotations_Button.clicked.connect(self.load_data_from_db)
         self.all_times_checkBox.clicked.connect(self.all_times)
         self.user_list_comboBox.textActivated.connect(self.user_selected)
+
+        # StatusBar Greeting
+        self.print_status(f"Successfully logged in: {self.user}")
         
 
     def quit(self):
@@ -124,11 +127,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.saveButton.setEnabled(False)
             self.prevButton.setEnabled(False)
             self.actionPrevious.setEnabled(False)
-
-    def load_images_from_google(self):
-        self.reset()
-        
-
+        logging.info(f"Opened Directory: {self.images_directory_path}")
+        logging.info(f"Loaded {len(self.images)} pictures.")
+        self.print_status(f"Loaded {len(self.images)} pictures.")
 
     def create_pollen_objects(self, mode):
         if mode == "annotation":
@@ -146,7 +147,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             try:
                 p.get_image_metadata()
             except:
-                print(f"No metadata at {path}")
+                self.print_status(f"No metadata at {path}")
             if mode == "review":
                 p.annotation_id = self.loaded_data[n][0]
                 p.previous_class = self.loaded_data[n][2]
@@ -326,7 +327,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.saved = True
         self.current_pollen.labelled = True
         self._set_style_sheet(True)
-        print(self.current_pollen)
+        self.print_status("Saved")
+        logging.info(str(self.current_pollen))
         if not self._is_remaining():
             self.finished_folder()
 
@@ -398,6 +400,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.confidenceSlider.setValue(5)
         self.score_spinBox.setValue(50)
 
+    def print_status(self, message):
+        self.statusBar.showMessage(message, 5000)
+
     #########################################
     #               Review Page             #
     #########################################
@@ -439,20 +444,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         include_senior = self.include_senior_checkBox.isChecked()
 
         query_params_map = {
-            (True, True, True): ("SELECT * FROM annotation", ()),
-            (True, False, True): ("SELECT * FROM annotation WHERE senior = False", ()),
-            (True, True, False): ("SELECT * FROM annotation WHERE timestamp BETWEEN %s AND %s", (date_from, date_until)),
-            (True, False, False): ("SELECT * FROM annotation WHERE senior = False AND timestamp BETWEEN %s AND %s", (date_from, date_until)),
-            (False, True, True): ("SELECT * FROM annotation WHERE username = %s", (user,)),
-            (False, True, False): ("SELECT * FROM annotation WHERE username = %s AND timestamp BETWEEN %s AND %s", (user, date_from, date_until)),
+            (True, True, True): ("SELECT * FROM annotation;", ()),
+            (True, False, True): ("SELECT * FROM annotation WHERE senior = False;", ()),
+            (True, True, False): ("SELECT * FROM annotation WHERE timestamp BETWEEN %s AND %s;", (date_from, date_until)),
+            (True, False, False): ("SELECT * FROM annotation WHERE senior = False AND timestamp BETWEEN %s AND %s;", (date_from, date_until)),
+            (False, True, True): ("SELECT * FROM annotation WHERE username = %s;", (user,)),
+            (False, True, False): ("SELECT * FROM annotation WHERE username = %s AND timestamp BETWEEN %s AND %s;", (user, date_from, date_until)),
             # Not Callable. When a name is selected, the Senior option should ALWAYS be True
-            # (False, False, False): (f"SELECT * FROM annotation WHERE user = %s AND senior = 0 AND timestamp BETWEEN %s AND %s", (user, date_from, date_until)),
-            # (False, False, True): (f"SELECT * FROM annotation WHERE user = %s AND senior = 0", (user,)),
+            # (False, False, False): (f"SELECT * FROM annotation WHERE user = %s AND senior = 0 AND timestamp BETWEEN %s AND %s;", (user, date_from, date_until)),
+            # (False, False, True): (f"SELECT * FROM annotation WHERE user = %s AND senior = 0;", (user,)),
         }
 
         query, params = query_params_map[(user == "All Users", include_senior, all_times)]
-        print(query)
-        print(params)
+        logging.info(f"Review: {query} : {params}")
         cursor.execute(query, params)
         self.loaded_data = cursor.fetchall()
         connection.commit()
@@ -466,7 +470,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def load_data_to_ui(self):
         self.lcdNumber.display(len(self.loaded_data))
-        # pprint(self.loaded_data)
         self.annotation_id_label.setText(str(self.loaded_data[self.index][0]))
         self.path_label.setText(os.path.basename(self.loaded_data[self.index][1]))
         self.class_label.setText(self.loaded_data[self.index][2])

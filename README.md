@@ -1,11 +1,80 @@
-# User interface for subjective quality assessment KEVA-7026
+# Pollen Annotation Tool
 
-## Passwords:
+## Version: 1.0.0
 
-1.  Gmail, Clever Cloud:
+## About the App:
 
-    pollen.proj@gmail.com
-    Pollen5319ß
+    This app was designed for annotating Pollens.
+    The project has a Gmail account 'pollen.proj@gmail.com', and in it's Google Drive is the latest version of the application,
+    and the app's database is hosted on 'clever cloud'. Access to all of these are listed under the 'Accounts and Passwords' section.
+    **NOTE**: For the review function to be working properly, the pictures MUST stay in the same location as they were during annotation.
+
+## Usage:
+
+    ### Creating an account and Logging in:
+
+        In the folder of the project you will find a `Pollen.exe` file. Run this executable and the program will start and a Welcome screen will open.
+
+        In the welcome screen you will have the option for'Logging in' or 'creating an account'.
+        To create an account click on the appropriate button and fill out the form.
+        The 'experience level' drop down list is for specifying that you are senior or more of a beginner annotator.
+
+        **IMPORTANT NOTE**: The password you provide should be unique and not used elsewhere.
+                    While it is stored encrypted, it should NOT be a key to any of your other accounts for safety reasons.
+                    Retrieving a forgotten password can be achieved through directly accessing the database and decrypting the password,
+                    so while it is possible, you should keep a copy of it somewhere, in case you forget it.
+                    If you do forget it, you can contact me, my contact is down below.
+
+        After creating an account you can log in, and the main window of the app will show up.
+
+    ### Basic Annotation:
+
+        For using the tool, you first need to load a directory using the 'Open Dir' button in the toolbar.
+        If the folder contains pictures, they will show up in the thumbnails view dock, and first image appears in the middle of the screen.
+        If you decided which type of Pollen is on the picture:
+            - Select a Pollen Type from the list
+            - Input your confidence in your choice using the slider
+            - Add a comment if needed
+            - And click on the Save button (The save Button will only be enabled if you choose a pollen type.)
+            - Click on next and repeat the process for the remaining pictures in the folder
+
+        After labelling all the pictures in a folder a pop up message will appear.
+
+    ### Annotation Review:
+
+        For Senior Accounts the 'Review Tab' is enabled (above the top left corner of the picture), click on it and the review page will open.
+        First you will need to load previous annotations from the database, using the filters on the right. In the filter you can set the date
+        range and select users. (The 'include Senior annotations' checkbox is only for selecting 'All users' from the dropdown list, and for
+        further specifying the selection).
+        After setting the filter, click on the load button.
+
+        If your filter contains annotations the first picture will be loaded, and the counter will show how many annotations are loaded.
+        The Data panel shows the previous annotations details. After evaluating it do the following:
+            - Give the annotation a Score (0-100)
+            - Give it a Review comment if needed
+            ---* After this, do the Basic Annotations workflow ---
+            - Select a Pollen Type from the list
+            - Input your confidence in your choice using the slider
+            - Add a comment if needed
+            - And click on the Save button (The save Button will only be enabled if you choose a pollen type.)
+            - Click on next and repeat the process for the remaining pictures in the folder
+
+        *: While Reviewing and, providing feedback, your annotation will be saved as a separate record as-well.
+
+        **IMPORTANT NOTE**: For the review function to be working, the location of the pictures MUST be the same as it was
+                    during the annotation, otherwise the pictures will not load.
+
+    ### Singing out:
+
+        If you've want to switch accounts you can use the 'Sign Out' button or just by closing the window.
+        Closing the app is by closing the main window and the the welcome screen.
+
+## Accounts and Passwords:
+
+1.  Gmail, Clever Cloud account:
+
+    email: pollen.proj@gmail.com
+    password: Pollen5319
 
 2.  Clever Cloud PostgreSQL:
 
@@ -16,92 +85,12 @@
     POSTGRESQL_ADDON_PASSWORD=W2JF95zE1czTx9ngxrZyX2nHxi3Drm
     POSTGRESQL_ADDON_URI=postgresql://ucsuarf2fko8ds4k3443:W2JF95zE1czTx9ngxrZyX2nHxi3Drm@bql3duq2x8p5l7r5ahz0-postgresql.services.clever-cloud.com:5432/bql3duq2x8p5l7r5ahz0
 
-This is a general documentation and guide for setting up and using the user interface for subjective quality assessment of
+## License
 
-## Python environment setup
+    Distributed under the MIT License. See `LICENSE.txt` for more information.
 
-**IMPORTANT NOTE:** these instructions have ony been tested on VZ-imaged Macbook Pros and Dell Linux laptops with python 3.8
+## Contact
 
-1.  Install Anaconda
+    If you have any further questions or issues feel free to contact me:
 
-    https://docs.anaconda.com/anaconda/install/mac-os/
-
-2.  create conda environment
-
-    In a terminal navigate to the main directory of the program and run the following command:
-
-    conda create --name sas python=3.8
-
-3.  activate your environment
-
-    conda activate sas
-
-    **NOTE**: You can see if it is activated when the environment name shows up in parentheses in the terminal before your user name.
-
-4.  install the following packages.
-
-        pip install PyQt5
-        pip install python-vlc
-        pip install GitPython
-
-5.  videos folder setup
-
-    The final step is to place two folders to be compared. (Recommended path for the videos: VIDEOS folder in the program's directory.)
-
-    **NOTE**: The two folders must contain an equal number of videos, with the same filenames!
-
-## Usage and Instructions for the User Interface
-
-1.  In order to run the program you need to navigate to the main directory of the program in a terminal and run the following command (after you have activated the conda environment):
-
-        python3 src/main.py -fd "<first folder for comparison>" -sd "<second folder for comparison>"
-
-        e.g.:   python3 src/main.py -fd "./videos/original_encoded" -sd "./videos/vi4bj_algo_72063a5fixlighting"
-
-        More non mandatory parameters:
-        --res sets the screen resolution to the given size
-            values : 4K/FHD/MAC
-        --video_count <int> sets the maximum playable videos. default 30
-
-        --replay_count <int> sets the maximum replays for one video. default 1
-
-        --language sets the language in which the GUI is displayed
-            values : HUN/ENG
-
-        --paramfile <paramfile.json>
-            A json format paramfile can be specified where all of the command line prameters can be given.
-            The usage of the paramfile can be combined with the command line arguments, in this case the command line
-            parameters will be accepted.
-            example :
-            {
-            "firstdir": "videos/original_ivf" ,
-            "seconddir" : "videos/vi4bj_algo_2b680de6fixlighting_1",
-            "resolution": "MAC",
-            "replay_count" : 2 ,
-            "video_count" : 20,
-            "language" : "HUN"
-            }
-
-    **NOTE**: You will find folders to be compered in the 'videos' folder.
-
-2.  Once the program has started, you have to type in your VZID in the top left corner and click on the SUBMIT button.
-    Your VZID will then appear on top of the SUBMIT button with a green checkmark, and the first video will start playing.
-
-    **NOTE**: If the video does not play automatically, click on the NEXT button in the lower right corner.
-
-3.  Filling out the forms:
-
-    Two videos will be played side by side, please keep close attention to the details and the differences between them.
-    After the videos has stopped, complete the form below them:
-
-    - You have to compare the video on the RIGHT to the video on the LEFT.
-    - Grab all the sliders to the appropriate answers to the questions. e.g.: If the video on the left looks better grab the slider left.
-    - If you'd like to watch the videos again before moving to the next one, you can click on the REPLAY button (below the videos) and watch them again one more time.
-    - After you've answered all there questions, you can leave an additional comment below them.
-    - Once you've completed the form, please click on the NEXT button and the assessment of a new video starts.
-    - After completing all the forms in the assessment, a FINISH button will appear in the place of the NEXT button. After clicking it, you have completed the assessment, and a message box will appear with a SAVE button. Click Save and a new assessment will begin.
-
-    ## Version generation
-
-    Before using or releasing the Subjective Assessment Tool an Internal/version.json file must be generated. This can be done with src/version.py script.
-    This will generate the version.json containing the git hash, the branch name, and dirty state of the source files. This last one indicates whether the current source files have uncommited changes or not.
+    Horváth Dávid - horvath.david35@gmail.com
