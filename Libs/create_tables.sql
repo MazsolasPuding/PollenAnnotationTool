@@ -1,4 +1,4 @@
--- This SQL code is for Deleting ALL data from all of the Tables in the Database and recreating Them.
+-- This SQL code is for Deleting ALL data from all of the Tables in the Database and recreating them.
 -- Do NOT use it unless you have Backed up the online database AND you know what your doing.
 
 DROP TABLE IF EXISTS users CASCADE;

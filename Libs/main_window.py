@@ -94,11 +94,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # StatusBar Greeting
         self.print_status(f"Successfully logged in: {self.user}")
-        
+
 
     def quit(self):
         self.app.quit()
-    
+
     def closeEvent(self, event):
         QApplication.instance().aboutToQuit.emit()
 
@@ -113,6 +113,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def aboutQt(self):
         QApplication.aboutQt()
+
+    def load_predefined_classes(self, predef_classes_file):
+        if os.path.exists(predef_classes_file) is True:
+            with codecs.open(predef_classes_file, 'r', 'utf8') as f:
+                for line in f:
+                    line = line.strip()
+                    if self.label_list is None:
+                        self.label_list = [line]
+                    else:
+                        self.label_list.append(line)
+        self.pollenListWidget.addItems(self.label_list)
 
     def load_images(self, *,mode='annotation'):
         self.reset()
@@ -167,34 +178,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                                                     '%s - Open Directory' % __appname__, "",
                                                                     QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
 
-    def load_subdirectory_tree(self, tree_widget):
-        root_element = ET.Element("directory_tree")
-        for root, dirs, files in os.walk(self.images_directory_path):
-            dir_element = ET.SubElement(root_element, "directory", name=os.path.basename(root))
-            for f in files:
-                ET.SubElement(dir_element, "file", name=f)
-
-        # clear the tree widget before populating it
-        tree_widget.clear()
-
-        # create the root item
-        root_item = QTreeWidgetItem(tree_widget)
-        root_item.setText(0, os.path.basename(self.images_directory_path))
-
-        # recursively add child items for each directory and file in the tree
-        self._add_child_items(root_element, root_item)
-
-    def _add_child_items(self, xml_element, parent_item):
-        # iterate over the child elements of the XML element
-        for child_element in xml_element:
-            # create an item for the directory or file
-            item = QTreeWidgetItem(parent_item)
-            item.setText(0, child_element.get('name'))
-            if child_element.tag == 'directory':
-                # if the child element is a directory, recursively add child items
-                self._add_child_items(child_element, item)
-
-
     def show_image(self):
         self.load_metadata_to_table()
         if not os.path.exists(self.current_pollen.path):
@@ -224,7 +207,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def show_thumbnails(self, mode):
         if mode == "annotation":
-            paths = glob.glob(f"{self.images_directory_path}/*.jp*g")
+            paths = []
+            for image in self.images:
+                paths.append(image.path)
+            # paths = glob.glob(f"{self.images_directory_path}/*.jp*g")
         elif mode == "review":
             paths = []
             for row in self.loaded_data:
@@ -236,17 +222,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.model.layoutChanged.emit()
         self.thumbnailsView.resizeRowsToContents()
         self.thumbnailsView.resizeColumnsToContents()
-
-    def load_predefined_classes(self, predef_classes_file):
-        if os.path.exists(predef_classes_file) is True:
-            with codecs.open(predef_classes_file, 'r', 'utf8') as f:
-                for line in f:
-                    line = line.strip()
-                    if self.label_list is None:
-                        self.label_list = [line]
-                    else:
-                        self.label_list.append(line)
-        self.pollenListWidget.addItems(self.label_list)
 
     def class_selected(self, item):
         if self.current_pollen.labelled == False:
@@ -273,7 +248,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.show_image()
         if self.mode == "review":
             self.load_data_to_ui()
-    
+
     def _keep_in_range(self):
         if self.index >= len(self.images) - 1:
             self.nextButton.setEnabled(False)
@@ -304,11 +279,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if not pollen.labelled:
                 return True
         return False
-        
+
     def finished_folder(self):
         self.reset()
         QMessageBox.information(self, "Finished", "You have labelled all pictures in this folder.")
-
 
     def save(self):
         self.current_pollen.confidence = self.confidenceSlider.value()
@@ -350,7 +324,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return True
         except psycopg2.OperationalError or psycopg2.IntegrityError:
             return False
-        
+
     def save_review_to_db(self):
         connection = Connection().connect
         cursor = connection.cursor()
@@ -362,7 +336,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                        self.current_pollen.confidence,
                        self.current_pollen.comment,
                        datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")]
-
         try:
             query = 'INSERT INTO review (annotation_id, review_score, reviewer, review_comment, new_class, new_confidence, new_comment, timestamp) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)'
             cursor.execute(query, review_info)
@@ -419,7 +392,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return
         connection = Connection().connect
         cursor = connection.cursor()
-        cursor.execute("SELECT DISTINCT username FROM annotation")
+        cursor.execute("SELECT DISTINCT username FROM annotation;")
         users = cursor.fetchall()
         for user in users:
             self.user_list_comboBox.addItem(user[0])
