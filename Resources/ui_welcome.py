@@ -24,7 +24,7 @@ class Ui_Welcome(object):
     def setupUi(self, Welcome):
         if not Welcome.objectName():
             Welcome.setObjectName(u"Welcome")
-        Welcome.resize(1200, 800)
+        Welcome.resize(700, 450)
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -146,6 +146,12 @@ class Ui_Welcome(object):
 
         self.verticalLayout_2.addItem(self.verticalSpacer_2)
 
+        self.verticalLayout_2.setStretch(0, 1)
+        self.verticalLayout_2.setStretch(1, 2)
+        self.verticalLayout_2.setStretch(2, 1)
+        self.verticalLayout_2.setStretch(3, 1)
+        self.verticalLayout_2.setStretch(4, 1)
+        self.verticalLayout_2.setStretch(5, 1)
 
         self.retranslateUi(Welcome)
 

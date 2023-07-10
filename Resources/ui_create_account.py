@@ -25,7 +25,7 @@ class Ui_Create_account(object):
         if not Create_account.objectName():
             Create_account.setObjectName(u"Create_account")
         Create_account.setEnabled(True)
-        Create_account.resize(1200, 800)
+        Create_account.resize(700, 583)
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -40,7 +40,7 @@ class Ui_Create_account(object):
         Create_account.setSizeGripEnabled(False)
         self.verticalLayout_2 = QVBoxLayout(Create_account)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.verticalSpacer_3 = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout_2.addItem(self.verticalSpacer_3)
 
@@ -53,12 +53,12 @@ class Ui_Create_account(object):
         self.label = QLabel(Create_account)
         self.label.setObjectName(u"label")
         self.label.setEnabled(False)
-        sizePolicy1 = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Fixed)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Minimum)
         sizePolicy1.setHorizontalStretch(100)
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
         self.label.setSizePolicy(sizePolicy1)
-        self.label.setStyleSheet(u"font: 48pt \"Corbel\"; color:rgb(79, 79, 79);")
+        self.label.setStyleSheet(u"font: 36pt \"Corbel\"; color:rgb(79, 79, 79);")
         self.label.setAlignment(Qt.AlignCenter)
 
         self.horizontalLayout.addWidget(self.label)
@@ -78,12 +78,12 @@ class Ui_Create_account(object):
 
         self.label_2 = QLabel(Create_account)
         self.label_2.setObjectName(u"label_2")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Fixed)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Minimum)
         sizePolicy2.setHorizontalStretch(0)
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
         self.label_2.setSizePolicy(sizePolicy2)
-        self.label_2.setStyleSheet(u"font: 24pt \"Corbel\"; color:rgb(79, 79, 79);")
+        self.label_2.setStyleSheet(u"font: 22pt \"Corbel\"; color:rgb(79, 79, 79);")
 
         self.horizontalLayout_2.addWidget(self.label_2)
 
@@ -94,7 +94,7 @@ class Ui_Create_account(object):
 
         self.verticalLayout_2.addLayout(self.horizontalLayout_2)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.verticalSpacer = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout_2.addItem(self.verticalSpacer)
 
@@ -114,7 +114,12 @@ class Ui_Create_account(object):
 
         self.usernameEdit = QLineEdit(Create_account)
         self.usernameEdit.setObjectName(u"usernameEdit")
-        self.usernameEdit.setMinimumSize(QSize(0, 40))
+        sizePolicy3 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.usernameEdit.sizePolicy().hasHeightForWidth())
+        self.usernameEdit.setSizePolicy(sizePolicy3)
+        self.usernameEdit.setMinimumSize(QSize(0, 0))
         self.usernameEdit.setStyleSheet(u"font: 12pt \"Corbel\"; color:rgb(0, 0, 0);")
 
         self.verticalLayout.addWidget(self.usernameEdit)
@@ -127,7 +132,9 @@ class Ui_Create_account(object):
 
         self.passwordEdit = QLineEdit(Create_account)
         self.passwordEdit.setObjectName(u"passwordEdit")
-        self.passwordEdit.setMinimumSize(QSize(0, 40))
+        sizePolicy3.setHeightForWidth(self.passwordEdit.sizePolicy().hasHeightForWidth())
+        self.passwordEdit.setSizePolicy(sizePolicy3)
+        self.passwordEdit.setMinimumSize(QSize(0, 0))
         self.passwordEdit.setStyleSheet(u"font: 12pt \"Corbel\"; color:rgb(0, 0, 0);")
 
         self.verticalLayout.addWidget(self.passwordEdit)
@@ -140,7 +147,7 @@ class Ui_Create_account(object):
 
         self.passwordEdit_2 = QLineEdit(Create_account)
         self.passwordEdit_2.setObjectName(u"passwordEdit_2")
-        self.passwordEdit_2.setMinimumSize(QSize(0, 40))
+        self.passwordEdit_2.setMinimumSize(QSize(0, 0))
         self.passwordEdit_2.setStyleSheet(u"font: 12pt \"Corbel\"; color:rgb(0, 0, 0);")
 
         self.verticalLayout.addWidget(self.passwordEdit_2)
@@ -156,7 +163,7 @@ class Ui_Create_account(object):
         self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.comboBox.setObjectName(u"comboBox")
-        self.comboBox.setMinimumSize(QSize(0, 40))
+        self.comboBox.setMinimumSize(QSize(0, 0))
         self.comboBox.setEditable(False)
 
         self.verticalLayout.addWidget(self.comboBox)
@@ -179,7 +186,7 @@ class Ui_Create_account(object):
 
         self.verticalLayout_2.addLayout(self.horizontalLayout_3)
 
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.verticalSpacer_2 = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout_2.addItem(self.verticalSpacer_2)
 
@@ -193,7 +200,7 @@ class Ui_Create_account(object):
         self.createButton.setObjectName(u"createButton")
         sizePolicy.setHeightForWidth(self.createButton.sizePolicy().hasHeightForWidth())
         self.createButton.setSizePolicy(sizePolicy)
-        self.createButton.setMinimumSize(QSize(280, 50))
+        self.createButton.setMinimumSize(QSize(280, 0))
         self.createButton.setAcceptDrops(False)
         self.createButton.setAutoFillBackground(False)
         self.createButton.setStyleSheet(u"font: 20pt \"Corbel\";\n"
@@ -209,7 +216,7 @@ class Ui_Create_account(object):
 
         self.verticalLayout_2.addLayout(self.horizontalLayout_4)
 
-        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.verticalSpacer_4 = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout_2.addItem(self.verticalSpacer_4)
 
@@ -217,7 +224,7 @@ class Ui_Create_account(object):
         self.backButton.setObjectName(u"backButton")
         sizePolicy.setHeightForWidth(self.backButton.sizePolicy().hasHeightForWidth())
         self.backButton.setSizePolicy(sizePolicy)
-        self.backButton.setMinimumSize(QSize(100, 50))
+        self.backButton.setMinimumSize(QSize(100, 0))
         self.backButton.setAcceptDrops(False)
         self.backButton.setAutoFillBackground(False)
         self.backButton.setStyleSheet(u"font: 20pt \"Corbel\";\n"

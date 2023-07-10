@@ -30,7 +30,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1700, 950)
+        MainWindow.resize(1327, 633)
         font = QFont()
         font.setFamilies([u"SansSerif"])
         font.setPointSize(9)
@@ -99,7 +99,9 @@ class Ui_MainWindow(object):
 "border: 1px solid black;\n"
 "}")
         self.verticalLayout_2 = QVBoxLayout(self.centralwidget)
+        self.verticalLayout_2.setSpacing(2)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalLayout_2.setContentsMargins(3, 3, 3, 3)
         self.tabWidget = QTabWidget(self.centralwidget)
         self.tabWidget.setObjectName(u"tabWidget")
         self.tabWidget.setEnabled(True)
@@ -115,7 +117,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pictureLabel.sizePolicy().hasHeightForWidth())
         self.pictureLabel.setSizePolicy(sizePolicy)
         self.pictureLabel.setStyleSheet(u"background-color:rgb(216, 246, 255);\n"
-"font: 20pt \"SansSerif\";")
+"font: 15pt \"SansSerif\";")
         self.pictureLabel.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_5.addWidget(self.pictureLabel)
@@ -132,38 +134,47 @@ class Ui_MainWindow(object):
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.pictureLabel_2.sizePolicy().hasHeightForWidth())
         self.pictureLabel_2.setSizePolicy(sizePolicy1)
-        self.pictureLabel_2.setMinimumSize(QSize(800, 0))
+        self.pictureLabel_2.setMinimumSize(QSize(0, 0))
+        font1 = QFont()
+        font1.setFamilies([u"SansSerif"])
+        font1.setPointSize(15)
+        font1.setBold(False)
+        font1.setItalic(False)
+        self.pictureLabel_2.setFont(font1)
         self.pictureLabel_2.setStyleSheet(u"background-color:rgb(216, 246, 255);\n"
-"font: 20pt \"SansSerif\";")
+"font: 15pt \"SansSerif\";")
         self.pictureLabel_2.setAlignment(Qt.AlignCenter)
 
         self.horizontalLayout_12.addWidget(self.pictureLabel_2)
 
         self.verticalLayout_8 = QVBoxLayout()
+        self.verticalLayout_8.setSpacing(3)
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
         self.query_frame = QFrame(self.review_tab)
         self.query_frame.setObjectName(u"query_frame")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
         sizePolicy2.setHorizontalStretch(0)
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.query_frame.sizePolicy().hasHeightForWidth())
         self.query_frame.setSizePolicy(sizePolicy2)
-        self.query_frame.setMinimumSize(QSize(300, 0))
+        self.query_frame.setMinimumSize(QSize(0, 0))
         self.query_frame.setStyleSheet(u"QFrame#query_frame{\n"
 "border: 1px solid black;\n"
 "}")
         self.query_frame.setFrameShape(QFrame.StyledPanel)
         self.query_frame.setFrameShadow(QFrame.Raised)
         self.verticalLayout_9 = QVBoxLayout(self.query_frame)
+        self.verticalLayout_9.setSpacing(2)
         self.verticalLayout_9.setObjectName(u"verticalLayout_9")
+        self.verticalLayout_9.setContentsMargins(-1, 3, -1, 3)
         self.label_28 = QLabel(self.query_frame)
         self.label_28.setObjectName(u"label_28")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        sizePolicy3 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Minimum)
         sizePolicy3.setHorizontalStretch(0)
         sizePolicy3.setVerticalStretch(0)
         sizePolicy3.setHeightForWidth(self.label_28.sizePolicy().hasHeightForWidth())
         self.label_28.setSizePolicy(sizePolicy3)
-        self.label_28.setMinimumSize(QSize(0, 30))
+        self.label_28.setMinimumSize(QSize(0, 0))
         self.label_28.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_9.addWidget(self.label_28)
@@ -179,6 +190,8 @@ class Ui_MainWindow(object):
         self.horizontalLayout_17.setObjectName(u"horizontalLayout_17")
         self.label_32 = QLabel(self.query_frame)
         self.label_32.setObjectName(u"label_32")
+        sizePolicy3.setHeightForWidth(self.label_32.sizePolicy().hasHeightForWidth())
+        self.label_32.setSizePolicy(sizePolicy3)
 
         self.horizontalLayout_17.addWidget(self.label_32)
 
@@ -197,11 +210,15 @@ class Ui_MainWindow(object):
         self.horizontalLayout_14.setObjectName(u"horizontalLayout_14")
         self.label_29 = QLabel(self.query_frame)
         self.label_29.setObjectName(u"label_29")
+        sizePolicy3.setHeightForWidth(self.label_29.sizePolicy().hasHeightForWidth())
+        self.label_29.setSizePolicy(sizePolicy3)
 
         self.horizontalLayout_14.addWidget(self.label_29)
 
         self.from_dateTimeEdit = QDateTimeEdit(self.query_frame)
         self.from_dateTimeEdit.setObjectName(u"from_dateTimeEdit")
+        sizePolicy2.setHeightForWidth(self.from_dateTimeEdit.sizePolicy().hasHeightForWidth())
+        self.from_dateTimeEdit.setSizePolicy(sizePolicy2)
         self.from_dateTimeEdit.setDateTime(QDateTime(QDate(2023, 1, 1), QTime(0, 0, 0)))
         self.from_dateTimeEdit.setCurrentSection(QDateTimeEdit.YearSection)
 
@@ -216,11 +233,15 @@ class Ui_MainWindow(object):
         self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
         self.label_30 = QLabel(self.query_frame)
         self.label_30.setObjectName(u"label_30")
+        sizePolicy3.setHeightForWidth(self.label_30.sizePolicy().hasHeightForWidth())
+        self.label_30.setSizePolicy(sizePolicy3)
 
         self.horizontalLayout_15.addWidget(self.label_30)
 
         self.until_dateTimeEdit = QDateTimeEdit(self.query_frame)
         self.until_dateTimeEdit.setObjectName(u"until_dateTimeEdit")
+        sizePolicy3.setHeightForWidth(self.until_dateTimeEdit.sizePolicy().hasHeightForWidth())
+        self.until_dateTimeEdit.setSizePolicy(sizePolicy3)
         self.until_dateTimeEdit.setDateTime(QDateTime(QDate(2023, 1, 1), QTime(0, 0, 0)))
 
         self.horizontalLayout_15.addWidget(self.until_dateTimeEdit)
@@ -232,17 +253,23 @@ class Ui_MainWindow(object):
 
         self.all_times_checkBox = QCheckBox(self.query_frame)
         self.all_times_checkBox.setObjectName(u"all_times_checkBox")
+        sizePolicy2.setHeightForWidth(self.all_times_checkBox.sizePolicy().hasHeightForWidth())
+        self.all_times_checkBox.setSizePolicy(sizePolicy2)
 
         self.verticalLayout_9.addWidget(self.all_times_checkBox)
 
         self.include_senior_checkBox = QCheckBox(self.query_frame)
         self.include_senior_checkBox.setObjectName(u"include_senior_checkBox")
+        sizePolicy2.setHeightForWidth(self.include_senior_checkBox.sizePolicy().hasHeightForWidth())
+        self.include_senior_checkBox.setSizePolicy(sizePolicy2)
 
         self.verticalLayout_9.addWidget(self.include_senior_checkBox)
 
         self.load_annotations_Button = QPushButton(self.query_frame)
         self.load_annotations_Button.setObjectName(u"load_annotations_Button")
-        self.load_annotations_Button.setMinimumSize(QSize(0, 30))
+        sizePolicy3.setHeightForWidth(self.load_annotations_Button.sizePolicy().hasHeightForWidth())
+        self.load_annotations_Button.setSizePolicy(sizePolicy3)
+        self.load_annotations_Button.setMinimumSize(QSize(0, 0))
 
         self.verticalLayout_9.addWidget(self.load_annotations_Button)
 
@@ -255,12 +282,9 @@ class Ui_MainWindow(object):
 
         self.lcdNumber = QLCDNumber(self.query_frame)
         self.lcdNumber.setObjectName(u"lcdNumber")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.lcdNumber.sizePolicy().hasHeightForWidth())
-        self.lcdNumber.setSizePolicy(sizePolicy4)
-        self.lcdNumber.setMinimumSize(QSize(0, 30))
+        sizePolicy3.setHeightForWidth(self.lcdNumber.sizePolicy().hasHeightForWidth())
+        self.lcdNumber.setSizePolicy(sizePolicy3)
+        self.lcdNumber.setMinimumSize(QSize(0, 0))
 
         self.horizontalLayout_13.addWidget(self.lcdNumber)
 
@@ -269,26 +293,43 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_9.addLayout(self.horizontalLayout_13)
 
+        self.verticalLayout_9.setStretch(0, 1)
+        self.verticalLayout_9.setStretch(1, 1)
+        self.verticalLayout_9.setStretch(2, 1)
+        self.verticalLayout_9.setStretch(3, 1)
+        self.verticalLayout_9.setStretch(4, 1)
+        self.verticalLayout_9.setStretch(5, 1)
+        self.verticalLayout_9.setStretch(6, 1)
+        self.verticalLayout_9.setStretch(7, 1)
+        self.verticalLayout_9.setStretch(8, 1)
 
         self.verticalLayout_8.addWidget(self.query_frame)
 
         self.data_frame = QFrame(self.review_tab)
         self.data_frame.setObjectName(u"data_frame")
-        sizePolicy2.setHeightForWidth(self.data_frame.sizePolicy().hasHeightForWidth())
-        self.data_frame.setSizePolicy(sizePolicy2)
-        self.data_frame.setMinimumSize(QSize(300, 0))
+        sizePolicy4 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Preferred)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.data_frame.sizePolicy().hasHeightForWidth())
+        self.data_frame.setSizePolicy(sizePolicy4)
+        self.data_frame.setMinimumSize(QSize(0, 0))
         self.data_frame.setStyleSheet(u"QFrame#data_frame{\n"
 "border: 1px solid black;\n"
 "}")
         self.data_frame.setFrameShape(QFrame.StyledPanel)
         self.data_frame.setFrameShadow(QFrame.Raised)
         self.verticalLayout_6 = QVBoxLayout(self.data_frame)
+        self.verticalLayout_6.setSpacing(2)
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.verticalLayout_6.setContentsMargins(9, 3, -1, 3)
         self.label_27 = QLabel(self.data_frame)
         self.label_27.setObjectName(u"label_27")
-        sizePolicy4.setHeightForWidth(self.label_27.sizePolicy().hasHeightForWidth())
-        self.label_27.setSizePolicy(sizePolicy4)
-        self.label_27.setMinimumSize(QSize(0, 30))
+        sizePolicy5 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(0)
+        sizePolicy5.setHeightForWidth(self.label_27.sizePolicy().hasHeightForWidth())
+        self.label_27.setSizePolicy(sizePolicy5)
+        self.label_27.setMinimumSize(QSize(0, 0))
         self.label_27.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_6.addWidget(self.label_27)
@@ -443,19 +484,21 @@ class Ui_MainWindow(object):
         self.review_frame.setObjectName(u"review_frame")
         sizePolicy2.setHeightForWidth(self.review_frame.sizePolicy().hasHeightForWidth())
         self.review_frame.setSizePolicy(sizePolicy2)
-        self.review_frame.setMinimumSize(QSize(300, 0))
+        self.review_frame.setMinimumSize(QSize(0, 0))
         self.review_frame.setStyleSheet(u"QFrame#review_frame{\n"
 "border: 1px solid black;\n"
 "}")
         self.review_frame.setFrameShape(QFrame.StyledPanel)
         self.review_frame.setFrameShadow(QFrame.Raised)
         self.verticalLayout_7 = QVBoxLayout(self.review_frame)
+        self.verticalLayout_7.setSpacing(2)
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
+        self.verticalLayout_7.setContentsMargins(-1, 3, -1, 3)
         self.label_26 = QLabel(self.review_frame)
         self.label_26.setObjectName(u"label_26")
-        sizePolicy4.setHeightForWidth(self.label_26.sizePolicy().hasHeightForWidth())
-        self.label_26.setSizePolicy(sizePolicy4)
-        self.label_26.setMinimumSize(QSize(0, 30))
+        sizePolicy2.setHeightForWidth(self.label_26.sizePolicy().hasHeightForWidth())
+        self.label_26.setSizePolicy(sizePolicy2)
+        self.label_26.setMinimumSize(QSize(0, 0))
         self.label_26.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_7.addWidget(self.label_26)
@@ -476,11 +519,15 @@ class Ui_MainWindow(object):
 
         self.score_spinBox = QSpinBox(self.review_frame)
         self.score_spinBox.setObjectName(u"score_spinBox")
+        sizePolicy2.setHeightForWidth(self.score_spinBox.sizePolicy().hasHeightForWidth())
+        self.score_spinBox.setSizePolicy(sizePolicy2)
         self.score_spinBox.setMaximum(100)
         self.score_spinBox.setValue(50)
 
         self.horizontalLayout_11.addWidget(self.score_spinBox)
 
+        self.horizontalLayout_11.setStretch(0, 2)
+        self.horizontalLayout_11.setStretch(1, 1)
 
         self.verticalLayout_7.addLayout(self.horizontalLayout_11)
 
@@ -491,6 +538,11 @@ class Ui_MainWindow(object):
 
         self.review_comment_lineEdit = QLineEdit(self.review_frame)
         self.review_comment_lineEdit.setObjectName(u"review_comment_lineEdit")
+        sizePolicy6 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
+        sizePolicy6.setHorizontalStretch(0)
+        sizePolicy6.setVerticalStretch(0)
+        sizePolicy6.setHeightForWidth(self.review_comment_lineEdit.sizePolicy().hasHeightForWidth())
+        self.review_comment_lineEdit.setSizePolicy(sizePolicy6)
 
         self.verticalLayout_7.addWidget(self.review_comment_lineEdit)
 
@@ -498,11 +550,13 @@ class Ui_MainWindow(object):
         self.verticalLayout_8.addWidget(self.review_frame)
 
         self.verticalLayout_8.setStretch(0, 2)
-        self.verticalLayout_8.setStretch(1, 2)
+        self.verticalLayout_8.setStretch(1, 3)
         self.verticalLayout_8.setStretch(2, 1)
 
         self.horizontalLayout_12.addLayout(self.verticalLayout_8)
 
+        self.horizontalLayout_12.setStretch(0, 3)
+        self.horizontalLayout_12.setStretch(1, 1)
         self.tabWidget.addTab(self.review_tab, "")
 
         self.verticalLayout_2.addWidget(self.tabWidget)
@@ -510,7 +564,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1700, 20))
+        self.menubar.setGeometry(QRect(0, 0, 1327, 20))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         self.menuView = QMenu(self.menubar)
@@ -520,12 +574,9 @@ class Ui_MainWindow(object):
         MainWindow.setMenuBar(self.menubar)
         self.thumbnailDock = QDockWidget(MainWindow)
         self.thumbnailDock.setObjectName(u"thumbnailDock")
-        sizePolicy5 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
-        sizePolicy5.setHorizontalStretch(0)
-        sizePolicy5.setVerticalStretch(0)
         sizePolicy5.setHeightForWidth(self.thumbnailDock.sizePolicy().hasHeightForWidth())
         self.thumbnailDock.setSizePolicy(sizePolicy5)
-        self.thumbnailDock.setMinimumSize(QSize(288, 300))
+        self.thumbnailDock.setMinimumSize(QSize(112, 135))
         self.thumbnailDock.setStyleSheet(u"QDockWidget#thumbnailDock{\n"
 "border: 1px solid black;\n"
 "}")
@@ -543,7 +594,7 @@ class Ui_MainWindow(object):
 
         self.thumbnailsView = QTableView(self.dockWidgetContents)
         self.thumbnailsView.setObjectName(u"thumbnailsView")
-        self.thumbnailsView.setMinimumSize(QSize(270, 0))
+        self.thumbnailsView.setMinimumSize(QSize(0, 0))
 
         self.verticalLayout_3.addWidget(self.thumbnailsView)
 
@@ -553,7 +604,7 @@ class Ui_MainWindow(object):
         self.metadataDock.setObjectName(u"metadataDock")
         sizePolicy5.setHeightForWidth(self.metadataDock.sizePolicy().hasHeightForWidth())
         self.metadataDock.setSizePolicy(sizePolicy5)
-        self.metadataDock.setMinimumSize(QSize(100, 450))
+        self.metadataDock.setMinimumSize(QSize(0, 0))
         self.metadataDock.setStyleSheet(u"QDockWidget#metadataDock{\n"
 "border: 1px solid black;\n"
 "}")
@@ -578,6 +629,7 @@ class Ui_MainWindow(object):
         MainWindow.addDockWidget(Qt.LeftDockWidgetArea, self.metadataDock)
         self.labellingDock = QDockWidget(MainWindow)
         self.labellingDock.setObjectName(u"labellingDock")
+        self.labellingDock.setMinimumSize(QSize(178, 338))
         self.labellingDock.setStyleSheet(u"QWidget#dockWidgetContents_3{\n"
 "border: 1px solid black;\n"
 "}")
@@ -594,10 +646,6 @@ class Ui_MainWindow(object):
         self.pollenListWidget.setObjectName(u"pollenListWidget")
 
         self.verticalLayout.addWidget(self.pollenListWidget)
-
-        self.verticalSpacer_2 = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Minimum)
-
-        self.verticalLayout.addItem(self.verticalSpacer_2)
 
         self.label_3 = QLabel(self.dockWidgetContents_3)
         self.label_3.setObjectName(u"label_3")
@@ -639,10 +687,6 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addLayout(self.horizontalLayout_3)
 
-        self.verticalSpacer = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Minimum)
-
-        self.verticalLayout.addItem(self.verticalSpacer)
-
         self.label_4 = QLabel(self.dockWidgetContents_3)
         self.label_4.setObjectName(u"label_4")
 
@@ -653,10 +697,6 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.commentEdit)
 
-        self.verticalSpacer_3 = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Minimum)
-
-        self.verticalLayout.addItem(self.verticalSpacer_3)
-
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -665,7 +705,9 @@ class Ui_MainWindow(object):
 
         self.saveButton = QPushButton(self.dockWidgetContents_3)
         self.saveButton.setObjectName(u"saveButton")
-        self.saveButton.setMinimumSize(QSize(0, 50))
+        sizePolicy3.setHeightForWidth(self.saveButton.sizePolicy().hasHeightForWidth())
+        self.saveButton.setSizePolicy(sizePolicy3)
+        self.saveButton.setMinimumSize(QSize(0, 0))
         self.saveButton.setStyleSheet(u"")
         self.saveButton.setIcon(icon2)
         self.saveButton.setIconSize(QSize(20, 20))
@@ -686,7 +728,9 @@ class Ui_MainWindow(object):
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.prevButton = QPushButton(self.dockWidgetContents_3)
         self.prevButton.setObjectName(u"prevButton")
-        self.prevButton.setMinimumSize(QSize(0, 50))
+        sizePolicy2.setHeightForWidth(self.prevButton.sizePolicy().hasHeightForWidth())
+        self.prevButton.setSizePolicy(sizePolicy2)
+        self.prevButton.setMinimumSize(QSize(0, 0))
         self.prevButton.setIcon(icon4)
         self.prevButton.setIconSize(QSize(20, 20))
 
@@ -694,7 +738,9 @@ class Ui_MainWindow(object):
 
         self.nextButton = QPushButton(self.dockWidgetContents_3)
         self.nextButton.setObjectName(u"nextButton")
-        self.nextButton.setMinimumSize(QSize(0, 50))
+        sizePolicy2.setHeightForWidth(self.nextButton.sizePolicy().hasHeightForWidth())
+        self.nextButton.setSizePolicy(sizePolicy2)
+        self.nextButton.setMinimumSize(QSize(0, 0))
         self.nextButton.setIcon(icon5)
         self.nextButton.setIconSize(QSize(20, 20))
 
@@ -703,6 +749,9 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addLayout(self.horizontalLayout)
 
+        self.verticalLayout.setStretch(1, 10)
+        self.verticalLayout.setStretch(7, 1)
+        self.verticalLayout.setStretch(8, 1)
         self.labellingDock.setWidget(self.dockWidgetContents_3)
         MainWindow.addDockWidget(Qt.RightDockWidgetArea, self.labellingDock)
         self.statusBar = QStatusBar(MainWindow)
@@ -710,8 +759,9 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusBar)
         self.toolBar = QToolBar(MainWindow)
         self.toolBar.setObjectName(u"toolBar")
-        self.toolBar.setSizeIncrement(QSize(40, 40))
-        self.toolBar.setBaseSize(QSize(40, 40))
+        self.toolBar.setSizeIncrement(QSize(30, 30))
+        self.toolBar.setBaseSize(QSize(30, 30))
+        self.toolBar.setIconSize(QSize(20, 20))
         self.toolBar.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
         MainWindow.addToolBar(Qt.TopToolBarArea, self.toolBar)
 
@@ -739,7 +789,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)

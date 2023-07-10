@@ -25,7 +25,7 @@ class Ui_Login(object):
         if not Login.objectName():
             Login.setObjectName(u"Login")
         Login.setEnabled(True)
-        Login.resize(1200, 800)
+        Login.resize(700, 551)
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -53,12 +53,18 @@ class Ui_Login(object):
         self.label = QLabel(Login)
         self.label.setObjectName(u"label")
         self.label.setEnabled(False)
-        sizePolicy1 = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Fixed)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Minimum)
         sizePolicy1.setHorizontalStretch(100)
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
         self.label.setSizePolicy(sizePolicy1)
-        self.label.setStyleSheet(u"font: 48pt \"Corbel\"; color:rgb(79, 79, 79);")
+        font = QFont()
+        font.setFamilies([u"Corbel"])
+        font.setPointSize(36)
+        font.setBold(False)
+        font.setItalic(False)
+        self.label.setFont(font)
+        self.label.setStyleSheet(u"font: 36pt \"Corbel\"; color:rgb(79, 79, 79);")
         self.label.setAlignment(Qt.AlignCenter)
 
         self.horizontalLayout.addWidget(self.label)
@@ -83,7 +89,7 @@ class Ui_Login(object):
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
         self.label_2.setSizePolicy(sizePolicy2)
-        self.label_2.setStyleSheet(u"font: 24pt \"Corbel\"; color:rgb(79, 79, 79);")
+        self.label_2.setStyleSheet(u"font: 22pt \"Corbel\"; color:rgb(79, 79, 79);")
 
         self.horizontalLayout_2.addWidget(self.label_2)
 
@@ -108,26 +114,40 @@ class Ui_Login(object):
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.label_3 = QLabel(Login)
         self.label_3.setObjectName(u"label_3")
+        sizePolicy3 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Minimum)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
+        self.label_3.setSizePolicy(sizePolicy3)
         self.label_3.setStyleSheet(u"font: 12pt \"Corbel\"; color:rgb(0, 0, 0);")
 
         self.verticalLayout.addWidget(self.label_3)
 
         self.usernameEdit = QLineEdit(Login)
         self.usernameEdit.setObjectName(u"usernameEdit")
-        self.usernameEdit.setMinimumSize(QSize(0, 40))
+        sizePolicy4 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.usernameEdit.sizePolicy().hasHeightForWidth())
+        self.usernameEdit.setSizePolicy(sizePolicy4)
+        self.usernameEdit.setMinimumSize(QSize(0, 0))
         self.usernameEdit.setStyleSheet(u"font: 12pt \"Corbel\"; color:rgb(0, 0, 0);")
 
         self.verticalLayout.addWidget(self.usernameEdit)
 
         self.label_4 = QLabel(Login)
         self.label_4.setObjectName(u"label_4")
+        sizePolicy3.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
+        self.label_4.setSizePolicy(sizePolicy3)
         self.label_4.setStyleSheet(u"font: 12pt \"Corbel\"; color:rgb(0, 0, 0);")
 
         self.verticalLayout.addWidget(self.label_4)
 
         self.passwordEdit = QLineEdit(Login)
         self.passwordEdit.setObjectName(u"passwordEdit")
-        self.passwordEdit.setMinimumSize(QSize(0, 40))
+        sizePolicy4.setHeightForWidth(self.passwordEdit.sizePolicy().hasHeightForWidth())
+        self.passwordEdit.setSizePolicy(sizePolicy4)
+        self.passwordEdit.setMinimumSize(QSize(0, 0))
         self.passwordEdit.setStyleSheet(u"font: 12pt \"Corbel\"; color:rgb(0, 0, 0);")
 
         self.verticalLayout.addWidget(self.passwordEdit)
@@ -164,7 +184,7 @@ class Ui_Login(object):
         self.loginButton.setObjectName(u"loginButton")
         sizePolicy.setHeightForWidth(self.loginButton.sizePolicy().hasHeightForWidth())
         self.loginButton.setSizePolicy(sizePolicy)
-        self.loginButton.setMinimumSize(QSize(280, 50))
+        self.loginButton.setMinimumSize(QSize(280, 0))
         self.loginButton.setAcceptDrops(False)
         self.loginButton.setAutoFillBackground(False)
         self.loginButton.setStyleSheet(u"font: 20pt \"Corbel\";\n"
@@ -188,7 +208,7 @@ class Ui_Login(object):
         self.backButton.setObjectName(u"backButton")
         sizePolicy.setHeightForWidth(self.backButton.sizePolicy().hasHeightForWidth())
         self.backButton.setSizePolicy(sizePolicy)
-        self.backButton.setMinimumSize(QSize(100, 50))
+        self.backButton.setMinimumSize(QSize(100, 0))
         self.backButton.setAcceptDrops(False)
         self.backButton.setAutoFillBackground(False)
         self.backButton.setStyleSheet(u"font: 20pt \"Corbel\";\n"
@@ -197,6 +217,15 @@ class Ui_Login(object):
 
         self.verticalLayout_2.addWidget(self.backButton)
 
+        self.verticalLayout_2.setStretch(0, 1)
+        self.verticalLayout_2.setStretch(1, 2)
+        self.verticalLayout_2.setStretch(2, 2)
+        self.verticalLayout_2.setStretch(3, 1)
+        self.verticalLayout_2.setStretch(4, 2)
+        self.verticalLayout_2.setStretch(5, 1)
+        self.verticalLayout_2.setStretch(6, 2)
+        self.verticalLayout_2.setStretch(7, 1)
+        self.verticalLayout_2.setStretch(8, 1)
 
         self.retranslateUi(Login)
 

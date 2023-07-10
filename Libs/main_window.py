@@ -383,9 +383,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def tab_selected(self, tab_index):
         if tab_index == 0:
             self.mode = "annotation"
+            self.actionOpen_Dir.setEnabled(True)
         elif tab_index == 1:
             self.mode = "review"
             self.add_names_to_combo()
+            self.actionOpen_Dir.setEnabled(False)
 
     def add_names_to_combo(self):
         if self.names_loaded == True:
