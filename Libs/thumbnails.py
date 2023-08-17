@@ -52,7 +52,9 @@ class PreviewModel(QAbstractTableModel):
 
     def data(self, index, role):
         try:
-            data = self.previews[index.row() * 4 + index.column() ]
+            row = index.row()
+            column = index.column()
+            data = self.previews[row * NUMBER_OF_COLUMNS + column]
         except IndexError:
             # Incomplete last row.
             return

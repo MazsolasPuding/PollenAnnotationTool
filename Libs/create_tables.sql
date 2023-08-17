@@ -28,7 +28,7 @@ CREATE TABLE "review" (
 	"review_id"	BIGSERIAL NOT NULL,
 	"annotation_id"	INTEGER NOT NULL,
 	"reviewer"	VARCHAR(255) NOT NULL,
-	"review_score"	INTEGER NOT NULL,
+	"review_decision"	BOOLEAN NOT NULL,
 	"review_comment"	TEXT,
 	"new_class"	VARCHAR(255) NOT NULL,
 	"new_confidence"	INTEGER NOT NULL,

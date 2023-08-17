@@ -120,7 +120,7 @@ font: 15pt &quot;SansSerif&quot;;</string>
          </widget>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_8" stretch="2,3,1">
+         <layout class="QVBoxLayout" name="verticalLayout_8" stretch="2,3,2">
           <property name="spacing">
            <number>3</number>
           </property>
@@ -651,27 +651,44 @@ border: 1px solid black;
               </widget>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="2,1">
+              <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="0,0">
                <item>
-                <widget class="QLabel" name="label_24">
-                 <property name="text">
-                  <string>Review Score: [1-100]</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QSpinBox" name="score_spinBox">
+                <widget class="QPushButton" name="badAnsButton">
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
-                 <property name="maximum">
-                  <number>100</number>
+                 <property name="text">
+                  <string>Bad Answer</string>
                  </property>
-                 <property name="value">
-                  <number>50</number>
+                 <property name="icon">
+                  <iconset resource="resources.qrc">
+                   <normaloff>:/Icons/cancel.png</normaloff>:/Icons/cancel.png</iconset>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="goodAnsButton">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Good Answer</string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="resources.qrc">
+                   <normaloff>:/Icons/done.png</normaloff>:/Icons/done.png</iconset>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -803,8 +820,8 @@ border: 1px solid black;
    </property>
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>89</width>
+     <height>135</height>
     </size>
    </property>
    <property name="styleSheet">

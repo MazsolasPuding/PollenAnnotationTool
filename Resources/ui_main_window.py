@@ -21,9 +21,8 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDateTimeEdit
     QLCDNumber, QLabel, QLineEdit, QListWidget,
     QListWidgetItem, QMainWindow, QMenu, QMenuBar,
     QPushButton, QSizePolicy, QSlider, QSpacerItem,
-    QSpinBox, QStatusBar, QTabWidget, QTableView,
-    QTableWidget, QTableWidgetItem, QToolBar, QVBoxLayout,
-    QWidget)
+    QStatusBar, QTabWidget, QTableView, QTableWidget,
+    QTableWidgetItem, QToolBar, QVBoxLayout, QWidget)
 import resources_rc
 
 class Ui_MainWindow(object):
@@ -512,22 +511,28 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_11 = QHBoxLayout()
         self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
-        self.label_24 = QLabel(self.review_frame)
-        self.label_24.setObjectName(u"label_24")
+        self.badAnsButton = QPushButton(self.review_frame)
+        self.badAnsButton.setObjectName(u"badAnsButton")
+        sizePolicy3.setHeightForWidth(self.badAnsButton.sizePolicy().hasHeightForWidth())
+        self.badAnsButton.setSizePolicy(sizePolicy3)
+        icon12 = QIcon()
+        icon12.addFile(u":/Icons/cancel.png", QSize(), QIcon.Normal, QIcon.Off)
+        self.badAnsButton.setIcon(icon12)
+        self.badAnsButton.setCheckable(True)
 
-        self.horizontalLayout_11.addWidget(self.label_24)
+        self.horizontalLayout_11.addWidget(self.badAnsButton)
 
-        self.score_spinBox = QSpinBox(self.review_frame)
-        self.score_spinBox.setObjectName(u"score_spinBox")
-        sizePolicy2.setHeightForWidth(self.score_spinBox.sizePolicy().hasHeightForWidth())
-        self.score_spinBox.setSizePolicy(sizePolicy2)
-        self.score_spinBox.setMaximum(100)
-        self.score_spinBox.setValue(50)
+        self.goodAnsButton = QPushButton(self.review_frame)
+        self.goodAnsButton.setObjectName(u"goodAnsButton")
+        sizePolicy3.setHeightForWidth(self.goodAnsButton.sizePolicy().hasHeightForWidth())
+        self.goodAnsButton.setSizePolicy(sizePolicy3)
+        icon13 = QIcon()
+        icon13.addFile(u":/Icons/done.png", QSize(), QIcon.Normal, QIcon.Off)
+        self.goodAnsButton.setIcon(icon13)
+        self.goodAnsButton.setCheckable(True)
 
-        self.horizontalLayout_11.addWidget(self.score_spinBox)
+        self.horizontalLayout_11.addWidget(self.goodAnsButton)
 
-        self.horizontalLayout_11.setStretch(0, 2)
-        self.horizontalLayout_11.setStretch(1, 1)
 
         self.verticalLayout_7.addLayout(self.horizontalLayout_11)
 
@@ -551,7 +556,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_8.setStretch(0, 2)
         self.verticalLayout_8.setStretch(1, 3)
-        self.verticalLayout_8.setStretch(2, 1)
+        self.verticalLayout_8.setStretch(2, 2)
 
         self.horizontalLayout_12.addLayout(self.verticalLayout_8)
 
@@ -604,7 +609,7 @@ class Ui_MainWindow(object):
         self.metadataDock.setObjectName(u"metadataDock")
         sizePolicy5.setHeightForWidth(self.metadataDock.sizePolicy().hasHeightForWidth())
         self.metadataDock.setSizePolicy(sizePolicy5)
-        self.metadataDock.setMinimumSize(QSize(0, 0))
+        self.metadataDock.setMinimumSize(QSize(89, 135))
         self.metadataDock.setStyleSheet(u"QDockWidget#metadataDock{\n"
 "border: 1px solid black;\n"
 "}")
@@ -841,7 +846,8 @@ class Ui_MainWindow(object):
         self.label_22.setText(QCoreApplication.translate("MainWindow", u"Timestamp", None))
         self.timestamp_label.setText("")
         self.label_26.setText(QCoreApplication.translate("MainWindow", u"Review", None))
-        self.label_24.setText(QCoreApplication.translate("MainWindow", u"Review Score: [1-100]", None))
+        self.badAnsButton.setText(QCoreApplication.translate("MainWindow", u"Bad Answer", None))
+        self.goodAnsButton.setText(QCoreApplication.translate("MainWindow", u"Good Answer", None))
         self.label_25.setText(QCoreApplication.translate("MainWindow", u"Comment:", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.review_tab), QCoreApplication.translate("MainWindow", u"Review Tab", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))

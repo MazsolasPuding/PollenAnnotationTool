@@ -90,6 +90,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tabWidget.tabBarClicked.connect(self.tab_selected)
         self.load_annotations_Button.clicked.connect(self.load_data_from_db)
         self.all_times_checkBox.clicked.connect(self.all_times)
+        self.badAnsButton.clicked.connect(self.bad_review)
+        self.goodAnsButton.clicked.connect(self.good_review)
         self.user_list_comboBox.textActivated.connect(self.user_selected)
 
         # StatusBar Greeting
@@ -131,7 +133,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.open_dir_dialog()
         self.create_pollen_objects(mode)
         if self.images:
-            self.show_image()
+            self.show_image(mode)
             self.show_thumbnails(mode)
             self.toggle_all_actions()
             self.actionSave.setEnabled(False)
@@ -178,14 +180,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                                                     '%s - Open Directory' % __appname__, "",
                                                                     QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
 
-    def show_image(self):
+    def show_image(self, mode="annotation"):
         self.load_metadata_to_table()
         if not os.path.exists(self.current_pollen.path):
            self.pictureLabel_2.setText("Path Error. The current was not found on your system.")
            return
         current_image = self.images[self.index].pixmap
-        self.scale_image(current_image, self.pictureLabel)
-        self.scale_image(current_image, self.pictureLabel_2)
+        if mode == "annotation":
+            self.scale_image(current_image, self.pictureLabel)
+        if mode == "review":
+            self.scale_image(current_image, self.pictureLabel_2)
 
     def scale_image(self, image, label):
         size = label.size()
@@ -226,16 +230,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def class_selected(self, item):
         if self.current_pollen.labelled == False:
             self.current_pollen.class_ = item.text()
-            self.saveButton.setEnabled(True)
-            self.actionSave.setEnabled(True)
+            if self.mode == "annotation" or self.goodAnsButton.isChecked() or self.badAnsButton.isChecked():
+                self.saveButton.setEnabled(True)
+                self.actionSave.setEnabled(True)
 
     def previous(self):
         self.index -= 1
         self.current_pollen = self.images[self.index]
         self._keep_in_range()
-        self._set_style_sheet(self.current_pollen.labelled)
+        self._set_save_style_sheet(self.current_pollen.labelled)
         self.reset_inputs()
-        self.show_image()
+        self.show_image(self.mode)
         if self.mode == "review":
             self.load_data_to_ui()
 
@@ -243,9 +248,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.index += 1
         self.current_pollen = self.images[self.index]
         self._keep_in_range()
-        self._set_style_sheet(self.current_pollen.labelled)
+        self._set_save_style_sheet(self.current_pollen.labelled)
         self.reset_inputs()
-        self.show_image()
+        self.show_image(self.mode)
         if self.mode == "review":
             self.load_data_to_ui()
 
@@ -262,7 +267,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.prevButton.setEnabled(True)
             self.actionPrevious.setEnabled(True)
 
-    def _set_style_sheet(self, green=False):
+    def _set_save_style_sheet(self, green=False):
         if green:
             self.pictureLabel.setStyleSheet("background-color:rgb(89, 255, 103)")
             self.pictureLabel_2.setStyleSheet("background-color:rgb(89, 255, 103)")
@@ -279,6 +284,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if not pollen.labelled:
                 return True
         return False
+    
+    def _review_decision(self):
+        if self.goodAnsButton.isChecked():
+            return True
+        elif self.badAnsButton.isChecked():
+            return False
+
 
     def finished_folder(self):
         self.reset()
@@ -292,7 +304,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return
         if self.mode == "review":
             self.current_pollen.reviewer = self.user
-            self.current_pollen.review_score = self.score_spinBox.value()
+            self.current_pollen.review_decision = self._review_decision()
             self.current_pollen.review_comment = self.review_comment_lineEdit.text()
             try:
                 self.save_review_to_db()
@@ -300,7 +312,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 QMessageBox.critical(self, "Database Error", "Could not write to database, plase try again or restart the application.")
         self.saved = True
         self.current_pollen.labelled = True
-        self._set_style_sheet(True)
+        self._set_save_style_sheet(True)
         self.print_status("Saved")
         logging.info(str(self.current_pollen))
         if not self._is_remaining():
@@ -329,7 +341,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         connection = Connection().connect
         cursor = connection.cursor()
         review_info = [self.current_pollen.annotation_id,
-                       self.current_pollen.review_score,
+                       self.current_pollen.review_decision,
                        self.current_pollen.reviewer,
                        self.current_pollen.review_comment,
                        self.current_pollen.class_,
@@ -337,7 +349,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                        self.current_pollen.comment,
                        datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")]
         try:
-            query = 'INSERT INTO review (annotation_id, review_score, reviewer, review_comment, new_class, new_confidence, new_comment, timestamp) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)'
+            query = 'INSERT INTO review (annotation_id, review_decision, reviewer, review_comment, new_class, new_confidence, new_comment, timestamp) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)'
             cursor.execute(query, review_info)
             connection.commit()
             connection.close()
@@ -352,9 +364,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.thumbnailsView.setItemDelegate(self.delegate)
         self.model = PreviewModel()
         self.thumbnailsView.setModel(self.model)
-        self._set_style_sheet(False)
+        self._set_save_style_sheet(False)
+        self.reset_inputs()
         self.toggle_all_actions(False)
         self.pictureLabel.setText("Open a Directory to show images.")
+        self.pictureLabel_2.setText("Load from Database to show images.")
 
     def toggle_all_actions(self, enable=True):
         self.saveButton.setEnabled(enable)
@@ -366,12 +380,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.confidenceSlider.setEnabled(enable)
         self.commentEdit.setEnabled(enable)
         self.pollenListWidget.setEnabled(enable)
+        self.badAnsButton.setEnabled(enable)
+        self.goodAnsButton.setEnabled(enable)
 
     def reset_inputs(self):
         self.commentEdit.clear()
         self.review_comment_lineEdit.clear()
         self.confidenceSlider.setValue(5)
-        self.score_spinBox.setValue(50)
+        self.badAnsButton.setChecked(False)
+        self.goodAnsButton.setChecked(False)
+        self.goodAnsButton.setStyleSheet("")
+        self.badAnsButton.setStyleSheet("")
+        self.pollenListWidget.clearSelection()
 
     def print_status(self, message):
         self.statusBar.showMessage(message, 5000)
@@ -448,7 +468,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.annotation_id_label.setText(str(self.loaded_data[self.index][0]))
         self.path_label.setText(os.path.basename(self.loaded_data[self.index][1]))
         self.class_label.setText(self.loaded_data[self.index][2])
-        self.confidence_label.setText(str(self.loaded_data[self.index][3]))
+        self.confidence_label.setText(str(self.loaded_data[self.index][3] * 10))
         self.comment_label.setText(self.loaded_data[self.index][4])
         self.user_label.setText(self.loaded_data[self.index][5])
         self.is_senior_label.setText("Senior" if self.loaded_data[self.index][6] == 1 else "Medior")
@@ -465,6 +485,29 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             self.include_senior_checkBox.setChecked(True)
             self.include_senior_checkBox.setEnabled(False)
+
+    def bad_review(self):
+        self.goodAnsButton.setChecked(False)
+        self.goodAnsButton.setStyleSheet("")
+        if self.badAnsButton.isChecked():
+            self.badAnsButton.setStyleSheet("background-color:rgb(255, 89, 103)")
+        else:
+            self.badAnsButton.setStyleSheet("")
+        if self.pollenListWidget.selectedItems():
+            self.saveButton.setEnabled(True)
+            self.actionSave.setEnabled(True)
+
+
+    def good_review(self):
+        self.badAnsButton.setChecked(False)
+        self.badAnsButton.setStyleSheet("")
+        if self.goodAnsButton.isChecked():
+            self.goodAnsButton.setStyleSheet("background-color:rgb(89, 255, 103)")
+        else:
+            self.goodAnsButton.setStyleSheet("")
+        if self.pollenListWidget.selectedItems():
+            self.saveButton.setEnabled(True)
+            self.actionSave.setEnabled(True)
 
 
 if __name__ == '__main__':

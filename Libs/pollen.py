@@ -22,7 +22,7 @@ class Pollen():
         self.previous_is_senior = False
         self.previous_timestamp = ""
         self.reviewer = ""
-        self.review_score = 0
+        self.review_decision = 0
         self.review_comment = ""
 
     def get_image_metadata(self):
