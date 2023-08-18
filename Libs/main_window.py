@@ -27,7 +27,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.app = app
         self.images_directory_path = ""
-        self.predef_classes_path = "./Data/predefined_classes.txt"
+        # self.predef_classes_path = "./Data/predefined_classes.txt"
         self.label_list = []
         self.images = []
         self.user = user
@@ -40,7 +40,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.mode = "annotation"
 
         # Load Pollen classes
-        self.load_predefined_classes(self.predef_classes_path)
+        self.load_predefined_classes()
         self.toggle_all_actions(False)
 
         # Add Menu actions
@@ -116,9 +116,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def aboutQt(self):
         QApplication.aboutQt()
 
-    def load_predefined_classes(self, predef_classes_file):
-        if os.path.exists(predef_classes_file) is True:
-            with codecs.open(predef_classes_file, 'r', 'utf8') as f:
+    def load_predefined_classes(self):
+        if hasattr(sys, '_MEIPASS'):
+            base_dir = sys._MEIPASS
+        else:
+            base_dir = os.path.abspath(".")
+        resource_path = os.path.join(base_dir, "Data", "predefined_classes.txt")
+
+        if os.path.exists(resource_path) is True:
+            with codecs.open(resource_path, 'r', 'utf8') as f:
                 for line in f:
                     line = line.strip()
                     if self.label_list is None:
@@ -147,6 +153,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def create_pollen_objects(self, mode):
         if mode == "annotation":
             paths = glob.glob(f"{self.images_directory_path}/*.jp*g")
+            paths += glob.glob(f"{self.images_directory_path}/*.png")
         elif mode == "review":
             paths = []
             for row in self.loaded_data:

@@ -2,6 +2,7 @@
 Main Pytho file for running the Annotation Tool.
 """
 
+import os
 import sys
 import base64
 import logging
@@ -140,13 +141,22 @@ class Login(QDialog, Ui_Login):
     def go_back(self):
         self.widget.removeWidget(self.widget.widget(self.widget.currentIndex()))
 
+def get_log_file():
+    if hasattr(sys, '_MEIPASS'):
+        base_dir = sys._MEIPASS
+    else:
+        base_dir = os.path.abspath(".")
+    return os.path.join(base_dir, "Data", "usage.log")
 
 def main():
+
+    
+
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s %(levelname)s %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
-        filename="./Data/usage.log"
+        filename=get_log_file()
     )
 
     logging.warning("App Launched!")

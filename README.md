@@ -48,9 +48,9 @@
         further specifying the selection).
         After setting the filter, click on the load button.
 
-        If your filter contains annotations the first picture will be loaded, and the counter will show how many annotations are loaded.
+        If your filter contains annotations the first picture will be loaded, and the counter will show the number of annotations loaded.
         The Data panel shows the previous annotations details. After evaluating it do the following:
-            - Give the annotation a Score (0-100)
+            - Decide wether the Pollen on the picture is assigned to the correct Pollen class Using the Bad / Good Answer Buttons
             - Give it a Review comment if needed
             ---* After this, do the Basic Annotations workflow ---
             - Select a Pollen Type from the list
