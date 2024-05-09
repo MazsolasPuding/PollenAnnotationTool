@@ -78,12 +78,12 @@
 
 2.  Clever Cloud PostgreSQL:
 
-    POSTGRESQL_ADDON_HOST=bql3duq2x8p5l7r5ahz0-postgresql.services.clever-cloud.com
-    POSTGRESQL_ADDON_DB=bql3duq2x8p5l7r5ahz0
+    POSTGRESQL_ADDON_HOST=b4zcxz6bmhjsudbphroo-postgresql.services.clever-cloud.com
+    POSTGRESQL_ADDON_DB=b4zcxz6bmhjsudbphroo
     POSTGRESQL_ADDON_USER=ucsuarf2fko8ds4k3443
-    POSTGRESQL_ADDON_PORT=5432
+    POSTGRESQL_ADDON_PORT=50013
     POSTGRESQL_ADDON_PASSWORD=W2JF95zE1czTx9ngxrZyX2nHxi3Drm
-    POSTGRESQL_ADDON_URI=postgresql://ucsuarf2fko8ds4k3443:W2JF95zE1czTx9ngxrZyX2nHxi3Drm@bql3duq2x8p5l7r5ahz0-postgresql.services.clever-cloud.com:5432/bql3duq2x8p5l7r5ahz0
+    POSTGRESQL_ADDON_URI=postgresql:postgresql://ucsuarf2fko8ds4k3443:W2JF95zE1czTx9ngxrZyX2nHxi3Drm@b4zcxz6bmhjsudbphroo-postgresql.services.clever-cloud.com:50013/b4zcxz6bmhjsudbphroo
 
 ## License
 
